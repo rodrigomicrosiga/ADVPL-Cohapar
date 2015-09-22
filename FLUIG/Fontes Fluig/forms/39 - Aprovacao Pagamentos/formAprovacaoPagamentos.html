@@ -1,0 +1,210 @@
+<html>
+	 <head>
+        <title>Aprovação de pagamentos</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" type="text/css" href="jquery-ui-1.8.11.custom.css">
+        <link rel="stylesheet" type="text/css" href="custom.css">
+        <link rel="stylesheet" type="text/css" href="TableTools_JUI.css">
+        <script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+        <script type="text/javascript" src="jquery-1.5.1.js"></script>
+        <script type="text/javascript">
+            jQuery.noConflict();
+        </script>       
+        <script type="text/javascript" src="jquery-ui-1.8.11.custom.min.js"></script>
+        <script type="text/javascript" src="jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="TableTools.min.js"></script>
+        <script type="text/javascript" src="dtsutils.js"></script>
+        <script type="text/javascript" src="custom_historico.js"></script>
+        <script type="text/javascript" src="custom_pedido_compra.js"></script>
+        <script type="text/javascript" src="custom_cabecalho_nota.js"></script>
+        <script type="text/javascript" src="custom_itens_nota.js"></script>
+        <script type="text/javascript" src="json2.js"></script>
+        <script type="text/javascript" src="custom.js"></script>
+    </head>
+    
+	<body>
+	<h1>Aprovação de pagamentos</h1> 
+        <form id= "formAprova" class="header">
+        	<input type="hidden" id="titulos_alterados_json" name ="titulos_alterados_json" value="">
+ 			<input type="hidden" id="possui_reprovados" name ="possui_reprovados" value="">
+ 			<input type="hidden" id="workflowState" name ="workflowState" value="">
+ 			<input type="hidden" id="skipToActivity" name ="skipToActivity" value="">
+ 			<input type="hidden" id="dtLote" name="dtLote" size="20" value="" readonly>     
+			<input type="hidden" id="codUser" name="codUser">			
+        	<table>
+        	<tr>
+        		<td>
+        			<label for="lote">Lote:</label>
+        		</td>
+        		<td>
+					<label for="centroCusto">Centro de Custo:</label>
+        		</td>
+				<td>
+					<label for="nomeCentro">Nome Centro de Custo:</label>
+        		</td>
+        		<td>
+        			<label for="dataLote">Data:</label>
+        		</td>
+				<td>
+					<label for="nomeUser">Usuario:</label>
+        		</td>
+        	</tr>
+        	<tr>
+        		<td>
+        			<input type="text" id="lote" name="lote" size="10" value="" readonly> 
+             	</td>
+            	<td>
+            		<input type="text" id="centroCusto" name="centroCusto" size="20" value="" readonly>
+            	</td>
+				<td>
+            		<input type="text" id="nomeCentro" name="nomeCentro" size="50" value="" readonly>
+            	</td>
+            	<td>
+            		<input type="text" id="dataLote" name="dataLote" size="20" value="" readonly>
+            	</td>
+				<td>
+            		<input type="text" id="nomeUser" name="nomeUser" size="50" value="" readonly>
+            	</td>
+        	</tr>
+            </table> 
+        <h2>Títulos do lote</h2> 
+		<div id="div_titulos"></div>
+        <div id="abasDetalhes">
+        	<h3>Detalhes do Título</h3>
+			<ul>
+				<li><a href="#abaDocumentoOrigem">Documento origem</a></li>
+				<li><a href="#abaPedidoCompra">Pedido de compra</a></li>
+				
+				<!--Removido por não usar portal
+				<li><a href="#abaImagem">Imagem</a></li>
+				-->
+				
+				<li><a href="#abaSituacao">Histórico de Aprovação</a></li>
+				<li><a href="#abaComentarios">Aprovação</a></li>
+				<li><a href="#abaGestor">Gestor</a></li>
+			</ul>
+			
+			<div id="abaDocumentoOrigem"  class="aba" >
+			 <div class="header"> 
+			 		<table>
+			 			<tr>
+			 				<td>
+			 					<label for="idDocumento">Número:</label>
+			 				</td>
+			 				<td>
+			 					<label for="idSerie">Série:</label>
+			 				</td>
+			 				<td>
+			 					<label for="idEspecie">Espécie:</label>
+			 				</td>
+			 				<td>
+			 					<label for="idUF">UF:</label>
+			 				</td>
+			 				<td>
+			 					<label for="dtEmissao">Emissão:</label>
+			 				</td>
+			 				<td>
+			 					<label for="nmFornecedor">Fornecedor:</label>
+			 				</td>
+			 			</tr>
+			 			<tr>
+			 				<td>
+			 					<input type="text" id="idDocumento" size="10" value="" readonly>
+			 				</td>
+			 				<td> 
+            			        <input type="text" id="idSerie" size="3" value="" readonly> 
+                     		</td>
+			 				<td>
+			                    <input type="text" id="idEspecie" value="" readonly>
+                     		</td>
+			 				<td>
+                			    <input type="text" id="idUF" size="2" value="" readonly> 
+                     		</td>
+			 				<td>
+    			                <input type="text" id="dtEmissao" size="10" value = "" readonly> 
+	                     	</td>
+			 				<td>
+                    			<input type="text" id="nmFornecedor" size="30" value="" readonly>
+			 				</td>
+			 			</tr>
+			 		</table>
+                </div> 
+			
+			<div id="div_itens_nota">
+			</div>
+			<div class="header">
+					<table>
+						<tr>
+							<td>
+								<label for="vlTotalNota">Valor total:</label>	
+							</td>
+							<td>
+								<label for="dsCondicaoPagamento">Cond. pagamento:</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id="vlTotalNota" readonly>
+							</td>
+							<td>
+								<input type="text" id="dsCondicaoPagamento" readonly>
+							</td>
+						</tr>
+					</table> 
+            </div> 
+			</div>
+			<div id="abaPedidoCompra"  class="aba" >
+				<div id="div_pedidos">
+				</div>
+			</div>
+			<!--Removido por não usar portal
+			<div id="abaImagem"  class="aba">
+				<iframe id = "iframe_imagem" width="100%" height="100%" ></iframe>
+			</div>
+			-->
+			<div id="abaSituacao"  class="aba">
+				<div id= "div_historico"></div>
+			</div>
+			<div id="abaComentarios"  class="aba">
+			<table> 
+				<tr> 
+				<td>Avaliação:</td> 
+				<td><select id= "select_situacao" name="select_situacao" onchange="change_select_situacao();" > 
+						<option id="opt_pendente" value="P">Pendente</option> 
+        				<option id="opt_aprovado"  value="A">Aprovado</option> 
+						<option id="opt_reprovado" value="R">Reprovado</option> 
+						<option disabled="disabled" id="opt_cancelado" value="C">Cancelado</option> 
+						</select> 
+				</td> 
+				<tr> 
+					<td>Observações:</td> 
+					<td><textarea id="obs_titulo" onkeyup="change_text_observacao(this.value);" name="obs_titulo"> </textarea></td> 
+				</tr> 
+			</table> 
+			</div>
+			<div id="abaGestor"  class="aba">
+			<table>  
+                <tr>
+                <td>Aprovação Gestor</td>
+                <td>
+                	<select id= "select_fin" name="select_fin" >
+                		<option value="1"></option> 
+						<option value="Fn">Finaliza</option> 
+        				<option value="An">Volta pra analises</option> 
+					</select>
+                </td>
+                </tr>
+				<tr> 
+					<td>Observações:</td> 
+					<td><textarea id="obs_gestor" name="obs_gestor"> </textarea></td> 
+				</tr> 
+			</table> 
+			</div>
+		</div>
+		<input type="hidden" id="aprovador" name="aprovador">
+		</form>
+		
+	</body>
+	
+</html>

@@ -1,0 +1,5135 @@
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Dialog.ch"
+#line 28 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Font.ch"
+#line 29 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\PTMenu.ch"
+#line 31 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Print.ch"
+#line 33 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Colors.ch"
+#line 35 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Folder.ch"
+#line 37 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\msobject.ch"
+#line 38 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\VKey.ch"
+#line 42 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\WinApi.ch"
+#line 44 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\FWCommand.ch"
+#line 47 "PROTHEUS.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\FWCSS.CH"
+#line 50 "PROTHEUS.CH"
+#line 2 "C:\Users\Gilson\Documents\_TOTVS\_Projetos\COHAPAR\fontes_fsw\CONTRATOS\GCPA002.PRW"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\Ap5mail.ch"
+#line 3 "C:\Users\Gilson\Documents\_TOTVS\_Projetos\COHAPAR\fontes_fsw\CONTRATOS\GCPA002.PRW"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\GCPA002.ch"
+#line 4 "C:\Users\Gilson\Documents\_TOTVS\_Projetos\COHAPAR\fontes_fsw\CONTRATOS\GCPA002.PRW"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\FWMVCDEF.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\PARMTYPE.CH"
+#line 2 "FWMVCDEF.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\FWMBROWSE.CH"
+#line 1 "C:\TOTVS11\Microsiga\Protheus\include\FWBROWSE.CH"
+#line 3 "FWMBROWSE.CH"
+#line 4 "FWMVCDEF.CH"
+#line 5 "C:\Users\Gilson\Documents\_TOTVS\_Projetos\COHAPAR\fontes_fsw\CONTRATOS\GCPA002.PRW"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static aModXTipo := {	{"DL","AA*DE*DR*DV"}, {"PG","PE*PP*MP"}, {"IN","DI"}, {"TP","RP*MT*TP*MP*  "}, {"CV","MP*MT*TP*  "}, {"CC","MT*TP*  "}, {"LL","  "}, {"CS","  "}	}
+
+
+
+
+
+
+
+
+Static aModXTipo2 := {	{"DL","AA*DE*DR*DV"}, {"PG","MP"}, {"IN","DI"}, {"CV","MP*TP"}, {"CC","MP*TP"}, {"LL","  "}, {"CS","  "}   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA002()
+Local   lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Private aRotina := MenuDef()
+Private cCadastro	:= "Edital"+"..."
+Private aTrocaF3 := {}
+Private lRemanescente 	:= .F. 
+
+if lPrjCni
+	if Existblock( "GCP2BROW")
+		Execblock( "GCP2BROW", .F. , .F.  )
+	EndIf
+EndIf
+
+If !GCPValTab()
+	Return
+EndIf
+
+AjustaSX1()
+AjustaSX3()
+AjustaSX5()
+AjustaHelp()
+
+dbSelectArea("CO1")
+dbSetOrder(1)
+dbGoTop()
+mBrowse(,,,,"CO1",,,,,,GCPA02Status())
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Man(cAlias,nRecNo,nOpc)
+Local   lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+
+if lPrjCni
+	if Existblock( "GCP2MANU")
+		Execblock( "GCP2MANU", .F. , .F.  , {nOpc} )
+	EndIf
+EndIf
+GCPA02Edital(cAlias,nRecNo,nOpc)
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCPA02Edital( cAlias, nRecNo, nOpc, aSLComp, cPrfEdital, cNumProc, cTpModal, cTipo, cRegra)
+
+Local aHeader 		:= {}
+Local aCols   		:= {}
+Local cAliasITem	:= "CO2"
+Local aSolic		:= {}
+Local aRet			:= {}
+Local lRet			:= .T. 
+Local lGcp02Cmp		:= ExistBlock("GCP02CMP")
+Local lGCP2EDIM     := .F. 
+Local lPrjCni       := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Private oEnch		:= Nil
+Private oDlg		:= Nil
+
+aSLComp := If( aSLComp == nil, {}, aSLComp ) ;
+cPrfEdital := If( cPrfEdital == nil, "", cPrfEdital ) ;
+
+
+
+
+
+Private aTELA[0][0]
+Private aGETS[0]
+Private lRTudoOk		:= .F. 
+Private aREdital		:= {}
+Private aRHeader		:= {}
+Private aRCols			:= {}
+Private aRPartic		:= {}
+Private aRComiss		:= {}
+Private aRSolic			:= {}
+Private cLote			:= Space(TamSx3("CO2_LOTE")[1])
+
+if lPrjCni
+	lGCP2EDIM     := Existblock( "GCP2EDIM")
+EndIf
+
+If nOpc == 4
+	If CO1->CO1_ETAPA $ "PE,PR,PC,FV,CO,CE" .And.  lRet
+		Help("",1,"GCP02NOETP")
+		Return
+	Endif
+	If	lPrjCni
+
+		If	GCPChkCO3("3",CO1->CO1_CODEDT,CO1->CO1_NUMPRO)
+			Help("",1,"GCP02GANHA",,STR0098,4,1)
+			Return
+		EndIf
+	EndIf
+EndIf
+
+aHeader	:= CriaHeader(nil,"CO2_FILIAL/CO2_CODEDT/CO2_NUMPRO",Nil,cAliasITem)
+
+If nOpc <> 5
+
+	if lPrjCni
+		if  lGCP2EDIM
+			Execblock( "GCP2EDIM", .F. , .F.  , {xFilial(cAliasITem),(cAlias)->(CO1_CODEDT), (cAlias)->(CO1_NUMPRO)} )
+		EndIf
+	EndIf
+
+	aCols	:= CriaAcols(aHeader,cAliasITem,2,xFilial(cAliasITem)+(cAlias)->(CO1_CODEDT+CO1_NUMPRO),nOpc,nil,"CO2_ITEM","CO2_FILIAL+CO2_CODEDT+CO2_NUMPRO")
+Else
+	aRet 	:= GCP02DadosEdt( aHeader, aSLComp, cPrfEdital )
+	If !Empty(aRet)
+		aCols 	:= aClone(aRet[1])
+		aSolic 	:= aClone(aRet[2])
+	Else
+		Help("",1,"GCP02NOSOL")
+		Return
+	EndIf
+EndIf
+
+MontaTela( aHeader, aCols, nRecNo, nOpc, aSolic, cPrfEdital, cTpModal, cTipo, cRegra)
+
+
+
+
+If lGcp02Cmp .And.  ( nOpc == 3 .Or.  nOpc == 4 .Or.  nOpc == 5 ) .And.  lRTudoOk
+	ExecBlock("GCP02CMP", .F. , .F. ,{aREdital,aRHeader,aRCols,nOpc,aRPartic,aRComiss,aRSolic})
+EndIf
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCP02DadosEdt( aHeader, aSLComp, cEdital )
+Local aHeadC1 		:= CriaHeader(Nil,Nil,Nil,"SC1")
+Local nPosProdSC	:= aScan(aHeadC1,{|x| AllTrim(x[2])=="C1_PRODUTO"})+1
+Local nPosQtSC 		:= aScan(aHeadC1,{|x| AllTrim(x[2])=="C1_QUANT"})+1
+Local nPosNumSC		:= aScan(aHeadC1,{|x| AllTrim(x[2])=="C1_NUM"})+1
+Local nPosItemSC	:= aScan(aHeadC1,{|x| AllTrim(x[2])=="C1_ITEM"})+1
+Local nPosProdEdt	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO2_CODPRO"})
+Local nPosQtEdt		:= aScan(aHeader,{|x| AllTrim(x[2])=="CO2_QUANT"})
+Local nPosPaCOls	:= 0
+Local nPosSolic		:= 0
+Local cItem			:= Replicate("0",TamSx3("CO2_ITEM")[1])
+Local aRet	   		:= {}
+Local aCols	   		:= {}
+Local aSolic		:= {}
+Local nX	   		:= 0
+Local nY			:= 0
+Local nCols			:= 0
+
+For nX := 1 to Len(aSLComp)
+	If aSLComp[nX][1]
+		nPosPaCOls := aScan(aCols,{|x| AllTrim(x[nPosProdEdt]) == ALLTRIM(aSLComp[nX][nPosProdSC])})
+		nPosSolic := aScan(aSolic ,{|x| Alltrim(x[1]) == Alltrim(aSLComp[nX][nPosProdSC]) })
+		If Empty(nPosPaCOls) .Or.  Empty(nPosSolic)
+			cItem := Soma1(cItem)
+			aAdd(aCols,Array(Len(aHeader)+1))
+			nCols++
+			For nY := 1 To Len(aHeader)
+				If Alltrim(aHeader[nY][2]) == "CO2_CODPRO"
+					aCols[nCols][nY] := aSLComp[nX][nPosProdSC]
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_QUANT"
+					aCols[nCols][nY] := aSLComp[nX][nPosQtSC]
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_NUMSC"
+					aCols[nCols][nY] := aSLComp[nX][nPosNumSC]
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_ITEMSC"
+					aCols[nCols][nY] := aSLComp[nX][nPosItemSC]
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_UM"
+					aCols[nCols][nY] := POSICIONE( "SB1", 1, XFILIAL( "SB1" ) + aSLComp[nX][nPosProdSC] , "B1_UM" )
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_DESCR"
+					aCols[nCols][nY] := POSICIONE( "SB1", 1, XFILIAL( "SB1" ) + aSLComp[nX][nPosProdSC] , "B1_DESC" )
+				ElseIf Alltrim(aHeader[nY][2]) == "CO2_ITEM"
+					aCols[nCols][nY] := cItem
+				ElseIf CO2->( FieldPos(aHeader[nY][2]) ) > 0
+					aCols[nCols][nY] := CriaVar(aHeader[nY][2])
+				EndIF
+			next
+			aCols[nCols][Len(aHeader)+1] := .F. 
+
+			AAdd(aSolic,{ aSLComp[nX][nPosProdSC] , {aClone(aSLComp[nX])} })
+		Else
+			aCols[nPosPaCOls][nPosQtEdt] += aSLComp[nX][nPosQtSC]
+			AAdd(aSolic[nPosSolic][2],aClone(aSLComp[nX]))
+		EndIf
+	EndIf
+next
+
+If !Empty(aCols) .And.  !Empty(aSolic)
+	aRet := {aCols,aSolic}
+EndIf
+
+Return aRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function MontaTela( aHeader, aCols, nReg, nOpc, aSolic, cPrfEdital, cTpModal, cTipo, cRegra)
+Local oDlg := Nil
+Local lGCP02But		:= Existblock( "GCP02But" )
+Local aButAux		:= {}
+Local lPrjCni       := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local lGCP2MTEL     := iif (lPrjCni, Existblock( "GCP2MTEL"), .F. )
+Local lMTELOk
+Local lGCP2OPCX     := iif (lPrjCni, Existblock( "GCP2OPCX"), .F. )
+Local aGCP2OPCX     := {}
+Local lGcp02Edt		:= ExistBlock("GCP02EDT")
+Local nX			:= 0
+Local aGcp02Edt		:= {}
+Local aDadosCO1		:= {}
+Local aDadosCO2		:= {}
+
+
+
+
+Local nOpcX			:= 0
+Local cLinhaOk     	:= "GCP02LEdt"
+Local cTudoOk      	:= ""
+Local cIniCpos     	:= "+CO2_ITEM"
+Local nFreeze      	:= 000
+Local nMax         	:= 999
+Local aAlter    	:= {}
+Local cFieldOk     	:= "AllwaysTrue"
+Local cSuperDel     := "AllwaysTrue"
+Local cDelOk        := "AllwaysTrue"
+
+
+
+Local oEnch		 := Nil
+Local aCpoEnch   := {}
+Local aAlterEnch := {}
+Local aPos       := {000,000,080,400}
+Local nModelo    := 3
+Local lF3        := .F. 
+Local lMemoria   := .T. 
+Local lColumn    := .F. 
+Local caTela     := ""
+Local lNoFolder  := .F. 
+Local lProperty  := .F. 
+Local nOpcA      := 0
+Local nCont      := 0
+Local aArea      := GetArea()
+Local aAreaSX5	 := SX5->(GetArea())
+
+Local cAliasCab 	:= "CO1"
+Local cAliasITem	:= "CO2"
+Local aButtons		:= {}
+Local aPartic		:= {}
+Local aComiss		:= {}
+
+
+
+
+Local lEnchBar   		:= .F. 
+Local lPadrao    		:= .F. 
+Local nMinY	    		:= 400
+Local aSize	   			:= MsAdvSize(lEnchBar, lPadrao, nMinY)
+Local aInfo	 			:= {aSize[1],aSize[2],aSize[3],aSize[4],3,3}
+Local aObjects			:= {}
+Local aPosObj	   		:= {}
+Local cSeq 				:= ""
+
+Private oGetEdt			:= Nil
+Private oGetPart		:= Nil
+Private aColsSav        := {}
+
+aSolic := If( aSolic == nil, {}, aSolic ) ;
+cPrfEdital := If( cPrfEdital == nil, {}, cPrfEdital ) ;
+
+
+
+
+aAdd(aObjects,{100,100, .T. , .T. })
+aAdd(aObjects,{100,100, .T. , .T. })
+aAdd(aObjects,{100,015, .T. , .F. })
+aPosObj := MsObjSize(aInfo,aObjects)
+
+
+
+
+SX3->(dbSetOrder(1))
+SX3->(dbSeek(cAliasCab))
+While SX3->(!EOF()) .And.   SX3->X3_ARQUIVO == cAliasCab
+	If (X3USO(SX3->X3_USADO)) .AND.  (cNivel >= SX3->X3_NIVEL)
+		aAdd(aCpoEnch,SX3->X3_CAMPO)
+
+
+		If (nOpc == 5 .And.  ALLTRIM(SX3->X3_CAMPO) $ "CO1_MODALI/CO1_TIPO") .Or. 			nOpc == 4 .And.  ALLTRIM(SX3->X3_CAMPO) $ "CO1_CODEDT/CO1_NUMPRO"
+			SX3->(dbSkip())
+			Loop
+		EndIf
+
+		aAdd(aAlterEnch,SX3->X3_CAMPO)
+
+	Endif
+	SX3->(dbSkip())
+End
+
+
+
+If nOpc == 3
+	nOpcX	:= 1+2+4
+ElseIf nOpc == 5
+	nOpcX	:= 4+1+2
+ElseIf nOpc == 4
+	If CO1->(FieldPos("CO1_REMAN")) > 0 .And.  CO1->(FieldGet(FieldPos("CO1_REMAN")))
+		nOpcX	:= 0
+	ELSE
+		nOpcX	:= 1+2+4
+	ENDIF
+Else
+	nOpcX	:= 0
+EndIf
+
+if lPrjCni
+	if lGCP2MTEL
+		lGCP2MTEL := Execblock( "GCP2MTEL", .F. , .F. )
+		lMTELOk   := lGCP2MTEL
+	Else
+		lMTELOk   := .F. 
+	EndIf
+EndIf
+
+oDlg := MSDIALOG():New(aSize[7],aSize[2],aSize[6],aSize[5],cCadastro,,,,,,,,, .T. )
+
+RegToMemory(cAliasCab,IIF(nOpc == 3 .Or.  nOpc == 5 , .T. , .F. ))
+
+if lPrjCni
+	If nOpc == 5
+		If ExistBlock("GCP02SEQ")
+			cSeq := Execblock( "GCP02SEQ", .F. , .F. ,{cPrfEdital} )
+		Else
+			cSeq := ""
+		EndIF
+
+		If ValType( cSeq ) == "C"
+			M->CO1_CODEDT := PadR( AllTrim(cPrfEdital)+AllTrim(cSeq), TamSX3( "CO1_CODEDT" )[1] )
+		Else
+			M->CO1_CODEDT := PadR( cPrfEdital, TamSX3( "CO1_CODEDT" )[1] )
+		EndIf
+
+
+
+
+
+
+
+
+
+
+		If ExistBlock("GCP02MOD")
+			cTpModal := Execblock( "GCP02MOD", .F. , .F. ,{cTpModal} )
+		Endif
+
+		M->CO1_MODALI := cTpModal
+
+		M->CO1_DESMOD := Posicione("SX5",1,xFilial("SX5")+"LF"+cTpModal,"X5_DESCRI")
+		M->CO1_TIPO	:= cTipo
+		M->CO1_REGRA	:= cRegra
+		M->CO1_DESTIP := Posicione("SX5",1,xFilial("SX5")+"LG"+cTipo,"X5_DESCRI")
+		aAlter := {"CO2_FRACAS","CO2_OBS"}
+	Elseif (lMTELOk )
+
+    	if lGCP2OPCX
+			aGCP2OPCX :=  Execblock( "GCP2OPCX", .F. , .F.  , {M->CO1_CODEDT, M->CO1_NUMPRO} )
+
+
+			if ValType(aGCP2OPCX[1]) == "N" .And.  ValType(aGCP2OPCX[2]) == "A"
+				nOpcX  := aGCP2OPCX[1]
+				aAlter := aGCP2OPCX[2]
+		   	EndIf
+		Else
+			aAlter := {"CO2_CODPRO","CO2_QUANT","CO2_UM","CO2_VLESTI","CO2_LOTE","CO2_FRACAS","CO2_OBS"}
+	    EndIf
+
+	Else
+		aAlter := {"CO2_CODPRO","CO2_QUANT","CO2_UM","CO2_VLESTI","CO2_LOTE","CO2_FRACAS","CO2_OBS"}
+	EndIf
+Else
+	If nOpc == 5
+		If ExistBlock("GCP02SEQ")
+			cSeq := Execblock( "GCP02SEQ", .F. , .F. ,{cPrfEdital} )
+		Else
+			cSeq := ""
+		EndIF
+		If ValType( cSeq ) == "C"
+			M->CO1_CODEDT := PadR( AllTrim(cPrfEdital)+AllTrim(cSeq), TamSX3( "CO1_CODEDT" )[1] )
+		Else
+			M->CO1_CODEDT := PadR( cPrfEdital, TamSX3( "CO1_CODEDT" )[1] )
+		EndIf
+
+		M->CO1_MODALI := cTpModal
+
+		M->CO1_DESMOD := Posicione("SX5",1,xFilial("SX5")+"LF"+cTpModal,"X5_DESCRI")
+		M->CO1_TIPO	:= cTipo
+		M->CO1_REGRA	:= cRegra
+		M->CO1_DESTIP := Posicione("SX5",1,xFilial("SX5")+"LG"+cTipo,"X5_DESCRI")
+		aAlter := {"CO2_VLESTI","CO2_LOTE"}
+
+
+		If lGcp02Edt
+			aGcp02Edt := ExecBlock("GCP02EDT", .F. , .F. ,{aHeader,aCols,aSolic})
+			If ValType( aGcp02Edt ) == "A" .And.  Len(aGcp02Edt) > 0
+				If ValType( aGcp02Edt[1] ) == "A"
+					aDadosCO2 := aClone(aGcp02Edt[1])
+					aCols := aClone(aDadosCO2)
+				EndIf
+				If ValType( aGcp02Edt[2] ) == "A"
+					aDadosCO1 := aClone(aGcp02Edt[2])
+					For nX := 1 To Len(aDadosCO1)
+						&("M->"+AllTrim(aDadosCO1[nX][1])) := aDadosCO1[nX][2]
+					next
+				EndIf
+			EndIf
+		EndIf
+	Elseif nOpc = 13
+		M->CO1_MODALI := cTpModal
+		M->CO1_DESMOD := Posicione("SX5",1,xFilial("SX5")+"LF"+cTpModal,"X5_DESCRI")
+		M->CO1_TIPO	:= cTipo
+		M->CO1_REGRA	:= cRegra
+		M->CO1_DESTIP := Posicione("SX5",1,xFilial("SX5")+"LG"+cTipo,"X5_DESCRI")
+		M->CO1_REMAN := .T. 
+	Else
+
+
+
+
+		If nOpc == 3 .Or.  nOpc == 4
+			aAlter := {"CO2_CODPRO","CO2_QUANT","CO2_UM","CO2_VLESTI","CO2_LOTE","CO2_FRACAS","CO2_OBS"}
+		EndIf
+
+
+
+
+		SX3->(dbSetOrder(1))
+		SX3->(dbSeek(cAliasITem))
+		While SX3->(!EOF()) .And.   SX3->X3_ARQUIVO == cAliasITem
+			If SX3->X3_PROPRI$"U" .AND.  (X3USO(SX3->X3_USADO)) .AND.  (cNivel >= SX3->X3_NIVEL)
+				aAdd(aAlter,SX3->X3_CAMPO)
+			Endif
+			SX3->(dbSkip())
+		End
+	EndIf
+EndIf
+
+RestArea(aAreaSX5)
+
+
+
+
+
+
+
+oEnch  := 	MsMGet():New(cAliasCab,nReg,nOpc,,,,aCpoEnch, {aPosObj[1][1],aPosObj[1][2],aPosObj[1][3],aPosObj[1][4]},aAlterEnch,nModelo,,,,oDlg,lF3, lMemoria,lColumn,caTela,lNoFolder,lProperty)
+oEnch:oBox:Align:= 3
+
+
+
+
+
+oGetEdt	:= 	MsNewGetDados():New(aPosObj[2][1],aPosObj[2][2],aPosObj[2][3],aPosObj[2][4],nOpcX, cLinhaOk ,cTudoOk,cIniCpos,aAlter,nFreeze,nMax,cFieldOk,cSuperDel,cDelOk,oDLG,aHeader,aCols)
+oGetEdt:obrowse:align:= 5
+
+oGetEdt:oBrowse:Align := 5
+
+
+
+aAdd(aButtons,{"PRECO",{|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Part(@aPartic,oGetEdt:nAt,nOpc),oGetEdt:oBrowse:lDisablePaint:= .F.  },"Participante(s) ","Particip."})
+
+
+aAdd(aButtons,{"CONSULTA",{|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Val(oGetEdt:nAt,nOpc),oGetEdt:oBrowse:lDisablePaint:= .F.  },"Consulta Preço","Cons. Preço"})
+
+if lPrjCni
+	aAdd(aButtons,{"ESTOMOVI",{|| oGetEdt:oBrowse:lDisablePaint:= .T. , Eval({|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Solic(@aSolic,nOpc, .T. ),oGetEdt:oBrowse:lDisablePaint:= .F. }),oGetEdt:oBrowse:lDisablePaint:= .F.  },"Solicitação de Compras...","Solicitação"})
+Else
+	aAdd(aButtons,{"ESTOMOVI",{|| oGetEdt:oBrowse:lDisablePaint:= .T. , Eval({|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Solic(@aSolic,nOpc),oGetEdt:oBrowse:lDisablePaint:= .F. }),oGetEdt:oBrowse:lDisablePaint:= .F.  },"Solicitação de Compras...","Solicitação"})
+EndIf
+
+aAdd(aButtons,{"POSCLI",{|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Com(@aComiss,nOpc),oGetEdt:oBrowse:lDisablePaint:= .F.  },"Comissão ","Comissão "})
+aAdd(aButtons,{"S4WB011N",{|| GdSeek(@oGetEdt,If( cPaisLoc $ "ANG|PTG", "Buscar artigo", "Buscar produto" )) },If( cPaisLoc $ "ANG|PTG", "Buscar artigo", "Buscar produto" ),"Busca"})
+
+
+
+
+
+If lGCP02But
+
+	if lPrjCni
+
+
+
+		aButAux := Execblock( "GCP02But", .F. , .F. , {nOpc,M->CO1_CODEDT, M->CO1_NUMPRO,oGetEdt:aCols[oGetEdt:nAt, 1 ], {|| oGetEdt:oBrowse:lDisablePaint:= .T. , Eval({|| oGetEdt:oBrowse:lDisablePaint:= .T. ,GCP02Solic(@aSolic,5, .F. ),oGetEdt:oBrowse:lDisablePaint:= .F. }), oGetEdt:oBrowse:lDisablePaint:= .F.  }       	 } )
+    Else
+		aButAux := Execblock( "GCP02But", .F. , .F.  )
+	EndIf
+
+	If ValType( aButAux ) == "A"
+		aEval( aButAux, {|x| aAdd( aButtons, x ) } )
+	EndIf
+EndIf
+GCP02TF31()
+
+if lPrjCni
+
+
+	oDlg:bInit 		:= EnchoiceBar(oDlg,{||IIF(GCP02TEdt() .And.  Obrigatorio(aGets,aTela), (nOpcA:=1, iif(VlGRVCP02(nOpc, nOpcA, aPartic,aComiss,aSolic,oDlg),oDlg:End(),)   ), ) }, {||RollBackSX8(),oDlg:End()},,aButtons)
+
+	oDlg:lCentered	:= .T. 
+	oDlg:Activate()
+
+	RestArea(aArea)
+Else
+	oDlg:bInit 		:= EnchoiceBar(oDlg,{||IIF(GCP02TEdt() .And.  VldModTip() .And. Obrigatorio(aGets,aTela),(nOpcA:=1,oDlg:End()), )},{||RollBackSX8(),oDlg:End()},,aButtons)
+	oDlg:lCentered	:= .T. 
+	oDlg:Activate()
+
+	If nOpcA == 1 .AND.  nOpc <> 2
+		Begin Sequence; BeginTran()
+		GCPA02Grv(nOpc,oGetEdt:aCols,aPartic,aComiss,aSolic,aCols)
+		EndTran(); end
+
+		If nOpc== 3 .Or.  nOpc == 4 .Or.  nOpc == 5
+			GCP02ComEmail(M->CO1_CODEDT , M->CO1_NUMPRO )
+		EndIf
+	Endif
+
+	RestArea(aArea)
+EndIf
+
+Return(nOpcA)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCPA02Grv(nOpc,aItEdt,aPartic,aComiss,aSolic,aCols)
+Local aArea := GetArea()
+Local aHeadEdt 	:= CriaHeader(nil,"CO2_FILIAL/CO2_CODEDT/CO2_NUMPRO",Nil,"CO2")
+Local aHeadPart := CriaHeader(nil,"CO3_FILIAL/CO3_CODEDT/CO3_NUMPRO/CO3_CODPRO",Nil,"CO3")
+Local aHeadCons := CriaHeader(nil,"COC_FILIAL/COC_CODEDT/COC_NUMPRO/COC_CODPRO",Nil,"COC")
+
+Local aHeadComis:= CriaHeader(nil,"CO9_NUMPRO/CO9_CODEDT",Nil,"CO9")
+Local aHeadSolic:= CriaHeader(Nil,Nil,Nil,"SC1")
+Local nX		:= 0
+Local nY		:= 0
+Local nI		:= 0
+Local nZ		:= 0
+Local nK		:= 0
+Local bCampo 	:= {|nField| FieldName(nField)}
+Local nPosItemEdt:=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_ITEM"})
+Local nPosProdEdt:=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_CODPRO"})
+Local nPosRevoga:=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_FRACAS"})
+Local nPosLtCO2:=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_LOTE"})
+Local nPRvObsCO2:=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_OBS"})
+Local nPosReman :=aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_REMAN"})
+
+Local nPosLoteEdt := 0
+Local nPosTipPar:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_TIPO"})
+Local nPosCodPar:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_CODIGO"})
+Local nPosLojPar:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_LOJA"})
+Local nPosItCO3:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_ITEM"})
+Local nPosLtCO3:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_LOTE"})
+Local nPosRvPar:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_REVOGA"})
+Local nPosRvObs:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_OBS"})
+
+Local nP_Lot	:= 0
+Local nPosCodCon:= aScan(aHeadCons,{|x| AllTrim(x[2])=="COC_CODIGO"})
+Local nPosLojCon:= aScan(aHeadCons,{|x| AllTrim(x[2])=="COC_LOJA"})
+Local nPosItComis:= aScan(aHeadComis,{|x| AllTrim(x[2])=="CO9_ITEM"})
+Local nPosNumSc	:= aScan(aHeadSolic,{|x| AllTrim(x[2])=="C1_NUM"}) + 1
+Local nPosItSc	:= aScan(aHeadSolic,{|x| AllTrim(x[2])=="C1_ITEM"}) + 1
+Local cItemCO2	:= Replicate("0",TamSX3("CO2_ITEM")[1])
+Local nAuxProd	:= 0
+Local nAuxItem	:= 0
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local cRetff := ""
+Local lGCP2FCCO2 := iif ( lPrjCni , ExistBlock("GCP2FCCO2"), .F. ), lRetCmps
+Local cGCP02GRV	:= Existblock("GCP02GRV")
+Local n1Cnt		:= 0
+Local n2Cnt		:= 0
+Local cCampo	:= ""
+Local aGrvCO1	:= {}
+Local aGrvCO7	:= {}
+Local lVoltaEtp := .F. 
+Local lContinua	:= .T. 
+Local cGrvLote	:= ""
+Local aRevoga	:= {}
+Local nSeek		:= 0
+Local cObsRev	:= ""
+
+If	nOpc == 4
+
+	If	GCPChkCO7("1",M->CO1_CODEDT,M->CO1_NUMPRO,PadR("PB",Len(CO7->CO7_MOVATU)),M->CO1_ETAPA,aGrvCO1,aGrvCO7)
+
+
+		For n1Cnt := 1 To CO1->(FCount())
+
+			cCampo := CO1->(Eval( bCampo, n1Cnt ))
+
+			If	M->&( cCampo ) <> CO1->(FieldGet(FieldPos(cCampo)))
+				lVoltaEtp := .T. 
+				Exit
+			EndIf
+
+		Next
+
+		If	! lVoltaEtp
+			CO2->(DbSetOrder(1))
+			For n1Cnt := 1 To Len(aItEdt)
+				If	!GdDeleted(n1Cnt,aHeadEdt,aItEdt) .And.  CO2->(DbSeek(xFilial("CO2")+M->CO1_CODEDT+M->CO1_NUMPRO+aItEdt[n1Cnt,nPosProdEdt]))
+
+					For n2Cnt := 1 To Len(aHeadEdt)
+						If	aHeadEdt[n2Cnt,10]<>"V" .And.  aItEdt[n1Cnt,n2Cnt] <> CO2->(FieldGet(FieldPos(AllTrim(aHeadEdt[n2Cnt,2]))))
+							lVoltaEtp := .T. 
+							Exit
+						EndIf
+					Next
+					If	lVoltaEtp
+						Exit
+					EndIf
+
+				Else
+
+					lVoltaEtp := .T. 
+					Exit
+				EndIf
+			Next
+		EndIf
+
+
+
+		If	! lVoltaEtp .And.  aScan(aItEdt,{|x| x[Len(aItEdt[1])] == .F. }) > 0 .And.  Iif(M->CO1_REGRA == "002",CO1->CO1_MODALI <> "PG", .T. )
+			CO3->(DbSetOrder(1))
+			For nY := 1 to Len(aPartic)
+				aItPart := aPartic[nY,2]
+				For n1Cnt := 1 To Len(aItPart)
+					If	! GdDeleted(n1Cnt,aHeadPart,aItPart) .And.  CO3->(DbSeek(xFilial("CO3")+M->CO1_CODEDT+M->CO1_NUMPRO+aPartic[nY,1]+aItPart[n1Cnt,nPosTipPar] + aItPart[n1Cnt,nPosCodPar] + aItPart[n1Cnt,nPosLojPar]))
+						For n2Cnt := 1 To Len(aHeadPart)
+							If	aHeadPart[n2Cnt,10]<>"V" .And.  aItPart[n1Cnt,n2Cnt] <> CO3->(FieldGet(FieldPos(AllTrim(aHeadPart[n2Cnt,2]))))
+								lVoltaEtp := .T. 
+								Exit
+							EndIf
+						Next
+						If	lVoltaEtp
+							Exit
+						EndIf
+					Else
+
+						lVoltaEtp := .T. 
+						Exit
+					EndIf
+				Next
+				If	lVoltaEtp
+					Exit
+				EndIf
+			Next
+			aItPart := {}
+		EndIf
+
+
+		If	lVoltaEtp
+			If lPrjCni
+				lContinua := Iif(FindFunction("APMsgYesNo"), APMsgYesNo(STR0100, STR0057), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.(STR0100, STR0057)))
+
+				If	lContinua
+					If	! Iif(FindFunction("APMsgYesNo"), APMsgYesNo("A alteração afetará a formulação das propostas?", STR0057), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.("A alteração afetará a formulação das propostas?", STR0057)))
+						aGrvCO1:={}
+					EndIf
+				EndIf
+
+			Else
+				lContinua := Iif(FindFunction("APMsgYesNo"), APMsgYesNo(STR0099+Chr(13)+Chr(10)+STR0100, STR0057), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.(STR0099+Chr(13)+Chr(10)+STR0100, STR0057)))
+
+				If	lContinua
+					If	! Iif(FindFunction("APMsgYesNo"), APMsgYesNo("A alteração afetará a formulação das propostas?", STR0057), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.("A alteração afetará a formulação das propostas?", STR0057)))
+						aGrvCO1:={}
+					EndIf
+				EndIf
+
+			EndIf
+		EndIf
+	EndIf
+EndIf
+
+
+If	lContinua
+
+	If	CO2->(FieldPos("CO2_LOTE"))>0 .And.  CO3->(FieldPos("CO3_LOTE"))>0
+		nPosLoteEdt := aScan(aHeadEdt,{|x| AllTrim(x[2])=="CO2_LOTE"})
+		nP_Lot		:= aScan(aHeadPart,{|x| AllTrim(x[2])=="CO3_LOTE"})
+	EndIf
+
+	For n1Cnt := 1 To Len(aItEdt)
+		If	!GdDeleted(n1Cnt,aHeadEdt,aItEdt)
+
+			If	nPosLoteEdt > 0 .And.  nP_Lot > 0
+				cGrvLote := aItEdt[n1Cnt,nPosLoteEdt]
+			EndIf
+
+			If	!Empty(cGrvLote)
+				aItPart := {}
+
+				For nX := 1 To Len(aPartic)
+					nY := AScan(aPartic[nX,2],{|x| AllTrim(x[nP_Lot])==AllTrim(cGrvLote)})
+					If	nY>0
+						aItPart := AClone(aPartic[nX,2])
+						Exit
+					EndIf
+				Next
+				If	!Empty(aItPart)
+					For nX := 1 To Len(aItEdt)
+						If	aItEdt[nX,nPosLoteEdt]==cGrvLote .And.  !GdDeleted(nX,aHeadEdt,aItEdt)
+							nY := AScan(aPartic,{|x| x[1]==aItEdt[nX,nPosProdEdt] } )
+							If	nY==0
+								AAdd(aPartic,{aItEdt[nX,nPosProdEdt],{}})
+								nY := Len(aPartic)
+							EndIf
+
+							If	Empty(aPartic[nY,2])
+								aPartic[nY,2]:=AClone(aItPart)
+							EndIf
+						EndIf
+					Next
+				EndIf
+			EndIf
+		EndIf
+	Next
+	aItPart := {}
+
+	if lPrjCni
+		If ExistBlock("GCP02PA8")
+			Execblock( "GCP02PA8", .F. , .F. ,{M->CO1_NUMPRO,nOpc} )
+		EndIf
+	EndIf
+
+
+	If aScan(aItEdt,{|x| x[Len(aItEdt[1])] == .F. }) > 0
+
+		CO3->(dbSetOrder(3))
+		For nY := 1 to Len(aPartic)
+			aItPart := aPartic[nY][2]
+			For nX := 1 To Len(aItPart)
+				lGrava := ( CO3->(dbSeek(xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+ aPartic[nY][1] + aItPart[nX][nPosItCO3] + aItPart[nX][nPosLtCO3] ) ) )
+
+				If  aItPart[nX,Len(aHeadPart)+1] .Or.  (lVoltaEtp .And.  aItPart[nX,nPosRvPar]=="1")
+					If lGrava
+
+						If	lVoltaEtp .And.  aItPart[nX,nPosRvPar]=="1"
+							nSeek := AScan(aRevoga,{|x| x[1]==aItPart[nX,nPosLtCO3]})
+							If	nSeek == 0
+								AAdd(aRevoga,{aItPart[nX,nPosLtCO3],"","",""})
+								nSeek := Len(aRevoga)
+							EndIf
+
+							If	!(AllTrim( CO3->CO3_CODIGO )$aRevoga[nSeek,3])
+								aRevoga[nSeek,3]:=aRevoga[nSeek,3]+AllTrim( CO3->CO3_CODIGO )+" "+AllTrim( CO3->CO3_LOJA )+"  "
+								aRevoga[nSeek,4]:=aRevoga[nSeek,4]+AllTrim( aItPart[nX,nPosRvObs] )+". "
+							EndIf
+
+						EndIf
+
+						RecLock("CO3", .F. )
+						CO3->(dbDelete())
+						MsUnlock()
+					EndIf
+				EndIf
+
+
+				nAuxProd := aScan(aItEdt,{ |aLinha| Alltrim(aLinha[nPosProdEdt]) == Alltrim(aPartic[nY][1]) })
+	            If nAuxProd > 0 .And.  !aItEdt[nAuxProd,Len(aHeadEdt)+1]
+					If !aItPart[nX,Len(aHeadPart)+1]
+						RecLock("CO3",!lGrava)
+						For nI:= 1 to Len(aHeadPart)-2
+							If FieldPos(Trim(aHeadPart[nI,2])) > 0
+								CO3->(FieldPut(FieldPos(Trim(aHeadPart[nI,2])),aItPart[nX,nI]))
+							EndIf
+						next
+						CO3->CO3_FILIAL := xFilial("CO3")
+						CO3->CO3_CODEDT := M->CO1_CODEDT
+						CO3->CO3_NUMPRO := M->CO1_NUMPRO
+						CO3->CO3_CODPRO := aPartic[nY][1]
+						CO3->CO3_LANCE	:= CO3->CO3_VLUNIT
+						MsUnLock()
+					EndIf
+				EndIf
+			next
+		next
+    EndIf
+
+
+	If aScan(aItEdt,{|x| x[Len(aItEdt[1])] == .F. }) > 0
+
+		If AliasInDic("COC")
+			COC->(dbSetOrder(1))
+			For nY := 1 to Len(aAcols)
+				aAColsFor := aAcols[nY][2]
+				For nX := 1 To Len(aAColsFor)
+					lGrava := !(COC->(dbSeek(xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+ aAcols[nY][1] + aAColsFor[nX][nPosTipPar] + aAColsFor[nX][nPosCodPar] ) ) )
+
+					If aAColsFor[nX,Len(aAcolsFor[nX])]
+						RecLock("COC", .F. )
+						COC->(dbDelete())
+						MsUnlock()
+					EndIf
+
+					nAuxItem := aScan(aItEdt,{ |aLinha| aLinha[nPosItemEdt] == aAcols[nY][1] })
+		            If nAuxItem > 0 .And.  !aItEdt[nAuxItem,Len(aHeadEdt)+1]
+						If !aAColsFor[nX,Len(aHeadCons)-1]
+							RecLock("COC",lGrava)
+							For nI:= 1 to Len(aHeadCons)-2
+								If FieldPos(Trim(aHeadCons[nI,2])) > 0
+									COC->(FieldPut(FieldPos(Trim(aHeadCons[nI,2])),aAColsFor[nX,nI]))
+								EndIf
+							next
+							COC->COC_FILIAL := xFilial("COC")
+							COC->COC_CODEDT := M->CO1_CODEDT
+							COC->COC_NUMPRO := M->CO1_NUMPRO
+							COC->COC_ITEMED	:= aACols[nY][1]
+							COC->COC_CODPRO := aACols[nY][5]
+							COC->COC_CODIGO := aAColsFor[nX][1]
+							COC->COC_LOJA	:= aAColsFor[nX][2]
+							COC->COC_PRECO	:= aAColsFor[nX][4]
+							COC->COC_VLRCON := aAcols[nY][3]
+							MsUnLock()
+						EndIf
+					EndIf
+				next
+			next
+		EndIf
+
+
+		SC1->(dbSetOrder(1))
+		SC8->(dbSetOrder(4))
+		For nX := 1 to Len(aSolic)
+			aSolAux := aSolic[nX][2]
+			For nY:= 1 to Len(aSolAux)
+				If aSolAux[nY][1]
+					If SC1->( MsSeek(xFilial("SC1") + aSolAux[nY][nPosNumSc] + aSolAux[nY][nPosItSc]) )
+						RecLock("SC1", .F. )
+						SC1->C1_CODED:= M->CO1_CODEDT
+						SC1->C1_NUMPR:= M->CO1_NUMPRO
+						SC1->C1_MODAL:= M->CO1_MODALI
+						SC1->C1_TPMOD:= M->CO1_TIPO
+						SC1->C1_COTACAO := "EDITAL"
+						MsUnLock()
+
+						If lPrjCni
+							RSTSCLOG("EDT",1,)
+						EndIf
+						If SC8->( MsSeek(xFilial("SC8")+SC1->(C1_COTACAO+C1_IDENT+C1_PRODUTO)))
+							RecLock("SC8", .F. )
+							SC8->C8_CODED:= M->CO1_CODEDT
+							SC8->C8_NUMPR:= M->CO1_NUMPRO
+							MsUnLock()
+						EndIf
+					EndIf
+				EndIf
+			next
+		next
+
+
+		CO2->(dbSetOrder(1))
+		For nX := 1 To Len(aItEdt)
+			If	lVoltaEtp .And.  aItEdt[nX,nPosRevoga]=="S"
+				lRevPar:= .F. 
+				nSeek := AScan(aRevoga,{|x| x[1]==aItEdt[nX,nPosLtCO2] })
+
+				If	nSeek == 0
+					AAdd(aRevoga,{aItEdt[nX,nPosLtCO2],"","",AllTrim( aItEdt[nX,nPRvObsCO2] )+". "})
+					nSeek := Len(aRevoga)
+					lRevPar:= .T. 
+				EndIf
+
+
+				aRevoga[nSeek,2]:=aRevoga[nSeek,2]+AllTrim( aItEdt[nX,nPosProdEdt] ) + " "
+			EndIf
+			lGrava := (CO2->(dbSeek(xFilial("CO2")+M->(CO1_CODEDT+CO1_NUMPRO)+aItEdt[nX][nPosProdEdt]) ) )
+
+			If (aItEdt[nX,Len(aHeadEdt)+1] .Or.  (lVoltaEtp .And.  aItEdt[nX,nPosRevoga]=="S")) .And.  CO3->(MsSeek(xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+ aItEdt[nX][nPosProdEdt]))
+				While CO3->(!EOF()) .And.  CO3->( CO3_FILIAL+CO3_CODEDT+CO3_NUMPRO+CO3_CODPRO ) == xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+ aItEdt[nX][nPosProdEdt]
+					If	lVoltaEtp .And.  aItEdt[nX,nPosRevoga]=="S" .And.  lRevPar
+						aRevoga[nSeek,3] := aRevoga[nSeek,3] + AllTrim( CO3->CO3_CODIGO )+" "+AllTrim( CO3->CO3_LOJA )+"  "
+					EndIf
+					RecLock("CO3", .F. )
+					CO3->(dbDelete())
+					MsUnlock()
+					CO3->(dbSkip())
+				EndDo
+			ENdIf
+
+			If (aItEdt[nX,Len(aHeadEdt)+1] .Or.  (lVoltaEtp .And.  aItEdt[nX,nPosRevoga]=="S")) .And.  SC1->(MsSeek(xFilial("SC1")+M->(CO1_CODEDT+CO1_NUMPRO)+aItEdt[nX,nPosProdEdt]))
+				While SC1->(!EOF()) .And.  SC1->(C1_FILIAL+C1_CODED+C1_NUMPR+C1_PRODUTO) == xFilial("SC1")+M->(CO1_CODEDT+CO1_NUMPRO)+aItEdt[nX,nPosProdEdt]
+					RecLock("SC1", .F. )
+					SC1->C1_CODED:= ""
+					SC1->C1_NUMPR:= ""
+					SC1->C1_MODAL:= ""
+					SC1->C1_TPMOD:= ""
+					SC1->C1_COTACAO	:= ""
+					SC1->(MsUnLock())
+				End
+			ENdIf
+			If (aItEdt[nX,Len(aHeadEdt)+1] .And.  lGrava)
+				SC1->(DbSetOrder(1))
+				If SC1->(DbSeek(xFilial("SC1")+CO2->CO2_NUMSC+CO2->CO2_ITEMSC))
+					RecLock("SC1",!lGrava)
+					SC1->C1_CODED:= ""
+					SC1->C1_NUMPR:= ""
+					SC1->C1_MODAL:= ""
+					SC1->C1_TPMOD:= ""
+					SC1->C1_COTACAO	:= ""
+					SC1->(MsUnlock())
+				EndIf
+				RecLock("CO2",!lGrava)
+
+				if lPrjCni
+					if Existblock( "GCP2EXC1")
+						Execblock( "GCP2EXC1", .F. , .F.  , {CO2->CO2_CODPRO} )
+					EndIf
+				EndIf
+
+				CO2->(dbDelete())
+				MsUnlock()
+
+
+			ElseIf !aItEdt[nX,Len(aHeadEdt)+1]
+				cItemCO2 := Soma1(cItemCO2)
+				RecLock("CO2",!lGrava)
+				For nI:= 1 to Len(aHeadEdt)-2
+
+					if lPrjCni
+						if lGCP2FCCO2
+							lRetCmps	:= Execblock( "GCP2FCCO2", .F. , .F. , {Trim(aHeadEdt[nI,2])} )
+
+							if ValType(lRetCmps) == "L"
+
+								if lRetCmps == .T. 
+									CO2->(FieldPut(FieldPos( Trim(aHeadEdt[nI,2] ) ) , aItEdt[nX,nI] ) )
+								EndIf
+
+					        Else
+					        	CO2->(FieldPut(FieldPos( Trim(aHeadEdt[nI,2] ) ) , aItEdt[nX,nI] ) )
+					        EndIf
+						Else
+							CO2->(FieldPut(FieldPos( Trim(aHeadEdt[nI,2] ) ) , aItEdt[nX,nI] ) )
+						EndIf
+					Else
+						If	FieldPos(Trim(aHeadEdt[nI,2]))>0
+							CO2->(FieldPut(FieldPos( Trim(aHeadEdt[nI,2] ) ) , aItEdt[nX,nI] ) )
+						EndIf
+					EndIf
+
+				next
+
+				if lPrjCni
+					if Existblock( "GCP2INSE")
+						Execblock( "GCP2INSE", .F. , .F.  , {nOpc,CO2->CO2_QUANT,CO2->CO2_CODPRO} )
+					EndIf
+				EndIf
+
+				CO2->CO2_FILIAL  := xFilial("CO2")
+				CO2->CO2_CODEDT  := M->CO1_CODEDT
+				CO2->CO2_NUMPRO  := M->CO1_NUMPRO
+				CO2->CO2_ORIGEM  := "CO1"
+				CO2->CO2_ITEM  	 := cItemCO2
+
+				MsUnLock()
+
+
+				If	lVoltaEtp .And.  !Empty(aGrvCO1) .And.  CO3->(DbSeek(xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+ aItEdt[nX][nPosProdEdt]))
+					While CO3->(!EOF()) .And.  CO3->( CO3_FILIAL+CO3_CODEDT+CO3_NUMPRO+CO3_CODPRO ) == xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+ aItEdt[nX][nPosProdEdt]
+						RecLock("CO3", .F. )
+						CO3->CO3_VLUNIT := CO3->CO3_LANCE
+						CO3->CO3_RANK   := Space(Len(CO3->CO3_RANK))
+						CO3->CO3_CLASS  := "X"
+						CO3->CO3_CLAANT := Space(Len(CO3->CO3_CLAANT))
+						CO3->CO3_REVOGA := "2"
+						MsUnlock()
+						CO3->(DbSkip())
+					EndDo
+				EndIf
+
+			EndIf
+		next
+
+
+		CO9->(dbSetOrder(1))
+		For nX := 1 To Len(aComiss)
+			lGrava := (CO9->(dbSeek(xFilial("CO9")+M->(CO1_CODEDT+CO1_NUMPRO)+aComiss[nX][nPosItComis]) ) )
+			If aComiss[nX,Len(aHeadComis)+1] .And.  lGrava
+				RecLock("CO9",!lGrava)
+				CO9->(dbDelete())
+				MsUnlock()
+			ElseIf !aComiss[nX,Len(aHeadComis)+1]
+				RecLock("CO9",!lGrava)
+				For nI:= 1 to Len(aHeadComis)-2
+					If FieldPos(Trim(aHeadComis[nI,2]))>0
+						CO9->(FieldPut(FieldPos(Trim(aHeadComis[nI,2])),aComiss[nX,nI]))
+					EndIf
+				next
+				CO9->CO9_FILIAL := xFilial("CO9")
+				CO9->CO9_CODEDT := M->CO1_CODEDT
+				CO9->CO9_NUMPRO := M->CO1_NUMPRO
+				CO9->CO9_ITEM 	:= aComiss[nX][nPosItComis]
+				MsUnLock()
+			EndIf
+		next
+
+
+		CO1->(dbSetOrder(1))
+		lGrava :=!(CO1->(dbSeek(xFilial("CO1")+M->(CO1_CODEDT+CO1_NUMPRO))))
+		RecLock("CO1",lGrava)
+		For nX := 1 to CO1->(FCount())
+			If "FILIAL" $ CO1->(FieldName(nX))
+				CO1->(FieldPut(nX,xFilial("CO1")))
+			Else
+				CO1->(FieldPut(nX,M->&(Eval(bCampo,nX) )))
+			EndIf
+
+			If M->CO1_ETAPA == "ED" .AND.  (M->CO1_MODALI == "DL" .Or.   M->CO1_MODALI == "IN") .AND.  AllTRim(M->CO1_TIPO) $ "DV/DE"
+					CO1->CO1_PASSO := "29"
+			ElseIf M->CO1_ETAPA == "ED" .AND.  (M->CO1_MODALI == "DL" .Or.   M->CO1_MODALI == "IN") .AND.  AllTRim(M->CO1_TIPO) $ "DI/AA"
+					CO1->CO1_PASSO := "31"
+			Elseif M->CO1_ETAPA == "ED" .AND.  M->CO1_MODALI == "DL" .AND.  AllTRim(M->CO1_TIPO) $ "DV"
+					CO1->CO1_PASSO := "62"
+			EndIf
+		next
+		MsUnlock()
+
+
+		If	lVoltaEtp .And.  !Empty(aGrvCO7)
+
+			If	!Empty(aRevoga)
+				cRevoga:=""
+				nSeek := 0
+				For nSeek := 1 To Len(aRevoga)
+					cRevoga+=aRevoga[nSeek,1]+Chr(13)+Chr(10)+aRevoga[nSeek,2]+Chr(13)+Chr(10)+aRevoga[nSeek,3]+Chr(13)+Chr(10)
+					cRevoga+="- - -"+Chr(13)+Chr(10)
+
+					cObsRev+=aRevoga[nSeek,4]
+				Next
+
+
+
+
+
+
+
+
+
+
+
+
+				GCPA006({{"CO7_CODEDT", M->CO1_CODEDT}, {"CO7_NUMPRO", M->CO1_NUMPRO}, {"CO7_VERSAO", M->CO1_VERSAO}, {"CO7_DTMOV" , dDataBase}, {"CO7_HRMOV" , Time()}, {"CO7_CODUSU", Upper(Alltrim(Substr(cUsuario,7,15)))}, {"CO7_MOVATU", "PR"}, {"CO7_DESATU", Posicione("SX5",1,xFilial("SX5")+"LE"+"PR","X5_DESCRI")},					{"CO7_ACAO"  , "" }, {"CO7_OBS001", cRevoga },					{"CO7_OBS002", cObsRev }, {"CO7_PASATU", M->CO1_PASSO}})
+			EndIf
+
+			GCPA006(aGrvCO7, aGrvCO1)
+			aGrvCO1 := {}
+			aGrvCO7 := {}
+		EndIf
+
+
+		If nOpc== 3 .Or.  nOpc == 4 .Or.  nOpc == 5
+			GCP02ComEmail(M->CO1_CODEDT , M->CO1_NUMPRO )
+		EndIf
+
+		if lPrjCni
+			If ExistBlock("GCP2GRVA")
+				Execblock( "GCP2GRVA", .F. , .F. ,{M->CO1_CODEDT, M->CO1_NUMPRO, M->CO1_MODALI, M->CO1_TIPO,oGetEdt:aCols,oGetEdt:aHeader} )
+			EndIf
+		EndIf
+	Else
+
+		CO2->(dbSetOrder(1))
+		CO2->(dbSeek(xFilial("CO2")+M->(CO1_CODEDT+CO1_NUMPRO) ) )
+		While CO2->(!EOF()) .And.  CO2->( CO2_FILIAL+CO2_CODEDT+CO2_NUMPRO ) == xFilial("CO2")+M->(CO1_CODEDT+CO1_NUMPRO)
+			RecLock("CO2", .F. )
+
+			if lPrjCni
+				if Existblock( "GCP2DELE")
+					Execblock( "GCP2DELE", .F. , .F.  , {CO2->CO2_CODPRO} )
+				EndIf
+			EndIf
+
+			CO2->(dbDelete())
+			MsUnlock()
+			CO2->(dbSkip())
+		EndDo
+
+
+		CO3->(dbSetOrder(1))
+		CO3->(dbSeek(xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO) ) )
+		While CO3->(!EOF()) .And.  CO3->( CO3_FILIAL+CO3_CODEDT+CO3_NUMPRO ) == xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)
+			RecLock("CO3", .F. )
+			CO3->(dbDelete())
+			MsUnlock()
+			CO3->(dbSkip())
+		EndDo
+
+
+		CO9->(dbSetOrder(1))
+		CO9->(dbSeek(xFilial("CO9")+M->(CO1_CODEDT+CO1_NUMPRO) ) )
+		While CO9->(!EOF()) .And.  CO9->( CO9_FILIAL+CO9_CODEDT+CO9_NUMPRO ) == xFilial("CO9")+M->(CO1_CODEDT+CO1_NUMPRO)
+			RecLock("CO9", .F. )
+			CO9->(dbDelete())
+			MsUnlock()
+			CO9->(dbSkip())
+		EndDo
+
+
+		SC1->(dbOrderNickName("GCP01"))
+		SC1->(MsSeek(xFilial("SC1")+M->(CO1_CODEDT+CO1_NUMPRO)))
+		While SC1->(!EOF()) .And.  SC1->(C1_FILIAL+C1_CODED+C1_NUMPR) == xFilial("SC1")+M->(CO1_CODEDT+CO1_NUMPRO)
+			RecLock("SC1", .F. )
+			SC1->C1_CODED:= ""
+			SC1->C1_NUMPR:= ""
+			SC1->C1_MODAL:= ""
+			SC1->C1_TPMOD:= ""
+			SC1->C1_COTACAO	:= ""
+			SC1->(MsUnLock())
+		End
+
+
+
+
+		CO1->(dbSetOrder(1))
+		If CO1->(dbSeek(xFilial("CO1")+M->(CO1_CODEDT+CO1_NUMPRO)))
+			RecLock("CO1", .F. )
+			CO1->(dbDelete())
+			MsUnlock()
+		EndIf
+	EndIf
+
+
+
+
+	Aadd(aREdital,{xFilial("CO1"),M->CO1_CODEDT,M->CO1_NUMPRO})
+	aRHeader := aClone(oGetEdt:aHeader)
+	aRCols   := aClone(oGetEdt:aCols)
+	aRPartic := aClone(aPartic)
+	aRComiss := aClone(aComiss)
+	aRSolic  := aClone(aSolic)
+
+
+
+
+	If cGCP02GRV
+		Execblock("GCP02GRV", .F. , .F. )
+	EndIf
+EndIf
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02VldPro()
+
+Local lRet := .T. 
+Local i := 0
+Local nT_aCOLS := Len(oGetEdt:aCOLS)
+Local nItem := oGetEdt:nAt
+Local nP_Pro := aScan(oGetEdt:aHeader,{|x| Trim(x[2])=="CO2_CODPRO"})
+Local cProd := M->CO2_CODPRO
+
+For i:=1 To nT_aCOLS
+	If i <> nItem
+		If oGetEdt:aCOLS[i,nP_Pro] == cProd .And.  !(oGetEdt:aCOLS[i,Len(oGetEdt:aHeader)+1])
+			Help("",1,"GCP02NOPROD")
+			lRet := .F. 
+		Endif
+	Endif
+next
+
+Return(lRet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02Hr()
+Local cHora := &(ReadVar())
+
+If ValType(cHora) == "C"
+	If "-" $ cHora .Or.  "  " $ cHora
+		Help(" ",1,"HORAINVALI")
+		Return( .F. )
+	Endif
+
+	If ! Empty(cHora)
+		If Val(Left(ALLTRIM(cHora), 2)) > 23 .Or.  Val(Right(ALLTRIM(cHora), 2)) > 59
+			Help(" ",1,"HORAINVALI")
+			Return( .F. )
+		Endif
+	Endif
+EndIf
+
+Return .T. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02TEdt()
+Local lRet 		:= .T. 
+Local aValTipo	:= Iif(M->CO1_REGRA == "002",aModXTipo2,aModXTipo)
+Local nX 			:= 0
+Local lRetPE		:= .F. 
+Local nCont		:= 0
+Local nSomaTot	:= SomaCO2()
+Local cTextoV		:= ""
+Local lPrjCni 	:= FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local nPosRevo	:= aScan(oGetEdt:aHeader,{|x| AllTrim(x[2])=="CO2_FRACAS"})
+For nX :=  1 to Len(oGetEdt:aCols)
+
+	If !oGetEdt:aCols[nX][Len(oGetEdt:aHeader)+1] .And.  oGetEdt:aCols[nX,nPosRevo]<>"S"
+		If !GCP02LEdt(nX)
+			lRet := .F. 
+			Exit
+		EndIf
+		nCont++
+	EndIf
+next
+
+If lRet .And.  Empty(nCont)
+	Help("",1,"GCP02NOITEM")
+	lRet := .F. 
+EndIf
+
+If lRet
+	lRet := ValDiaSRP()
+EndIf
+
+If	lRet
+	lRet := GCPA017Lim(M->CO1_REGRA,M->CO1_ESPECI,M->CO1_MODALI,nSomaTot)
+
+	If	M->CO1_REGRA=="001" .And.  M->CO1_ESPECI=="3"
+		Aviso(STR0057,STR0101+" "+M->CO1_REGRA,{"OK"})
+		lRet := .F. 
+	EndIf
+EndIf
+
+If lRet .And.  M->CO1_REGRA = "002" .And.  M->CO1_MODALI == "TP"
+	Aviso(STR0057,STR0134,{"OK"},1)
+	lRet := .F. 
+EndIf
+
+If lRet
+	nCont := aScan(aValTipo,{|x| x[1] == M->CO1_MODALI})
+	If !Empty(aValTipo[nCont,2]) .And.  Empty(M->CO1_TIPO) .And.  !(M->CO1_TIPO $ aValTipo[nCont,2])
+		Aviso(STR0057,STR0058,{"OK"})
+		lRet := .F. 
+	ElseIf Empty(aValTipo[nCont,2]) .And.  !Empty(M->CO1_TIPO)
+		M->CO1_TIPO := CriaVar("CO1_TIPO", .F. )
+	ElseIf !(M->CO1_TIPO $ aValTipo[nCont,2])
+		cTextoH := STR0059 +M->CO1_MODALI +" - " +AllTrim(M->CO1_DESMOD)
+		cTextoH += STR0060
+		For nX := 1 To Len(aValTipo[nCont,2])
+			If !Empty(Substr(aValTipo[nCont,2],nX,2))
+				cTextoH += Chr(13)+Chr(10) +Substr(aValTipo[nCont,2],nX,2) +" - " +AllTrim(Tabela("LG",Substr(aValTipo[nCont,2],nX,2), .F. ))
+			EndIf
+			nX += 2
+		next
+		Aviso(STR0057,cTextoH,{"OK"},2)
+		lRet := .F. 
+	EndIf
+EndIf
+
+
+
+
+If lRet .And.  ExistBlock("GCPA2EOK")
+	lRetPE:= ExecBlock("GCPA2EOK", .F. , .F. )
+	If Valtype( lRetPE ) == "L"
+		lRet := lRetPE
+	EndIf
+EndIf
+
+lRTudoOk := lRet
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02LEdt(nLinha)
+Local lRet := .T. 
+Local aCols:= oGetEdt:aCols
+Local aHeader:= oGetEdt:aHeader
+Local nPosQuant:= aScan(aHeader,{|x| AllTrim(x[2])=="CO2_QUANT"})
+Local nPosCod:= aScan(aHeader,{|x| AllTrim(x[2])=="CO2_CODPRO"})
+Local nPosPreco:= aScan(aHeader,{|x| AllTrim(x[2])=="CO2_VLESTI"})
+Local nPosLote:=aScan(aHeader,{|x| AllTrim(x[2])=="CO2_LOTE"})
+Local nPosRevo:=aScan(aHeader,{|x| AllTrim(x[2])=="CO2_FRACAS"})
+Local nPosObs :=aScan(aHeader,{|x| AllTrim(x[2])=="CO2_OBS"})
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local  lGCP2VALL   := iif (lPrjCni, Existblock( "GCP2VALL"), .F. )
+Local  lRetTst := .F. , lRetOk := .F. 
+Local n1Cnt := 0
+Local n2Cnt := 0
+
+nLinha := If( nLinha == nil, oGetEdt:nAt, nLinha ) ;
+
+If Valtype(nLinha) <> "N"
+	nLinha := oGetEdt:nAt
+EndIf
+
+If aCols[nLinha,Len(aHeader)+1]
+	Return( .T. )
+Endif
+
+
+if lPrjCni
+	if lGCP2VALL
+		lRetTst :=	Execblock( "GCP2VALL", .F. , .F. , {aCols[nLinha,nPosCod], aCols[nLinha,nPosQuant]} )
+		if ValType(lRetTst) == "L"
+			lRet := lRetTst
+		EndIf
+	Else
+		If Empty(aCols[nLinha,nPosCod]) .Or.  aCols[nLinha,nPosQuant] == 0
+			Help("",1,"GCP02NOLIN")
+			lRet := .F. 
+		Endif
+	EndIf
+Else
+
+	If Empty(aCols[nLinha,nPosCod]) .Or.  aCols[nLinha,nPosQuant] == 0 .Or.  (aCols[nLinha,nPosPreco]==0 .And.  (Empty(aACols) .Or.  (aCols[nLinha,9] == 0 .And.  aACols[1,3] == 0) ))
+		Help("",1,"GCP02NOLIN")
+		lRet := .F. 
+	Endif
+	If	M->CO1_AVAL=="2" .And.  !aCols[nLinha,Len(aHeader)+1]
+		If	Empty(aCols[nLinha,nPosLote])
+			Help(" ",1,"OBRIGAT2",,RetTitle("CO2_LOTE"),4,1)
+			lRet := .F. 
+		EndIf
+	EndIf
+
+	If	lRet
+		If	M->CO1_AVAL$"23"
+			If	aCols[nLinha,nPosRevo]=="S"
+				If	M->CO1_AVAL=="2"
+					GCP02Rpl(nLinha,aCols[nLinha,nPosLote],aCols[nLinha,nPosObs],nPosLote,nPosObs)
+				EndIf
+				lRet := .F. 
+
+				For n1Cnt := 1 To Len(aCols)
+
+					If	aCols[n1Cnt,nPosRevo]=="S" .Or.  aCols[n1Cnt,Len(aHeader)+1]
+						n2Cnt++
+					EndIf
+					If	aCols[n1Cnt,nPosLote]==aCols[nLinha,nPosLote] .And.  !Empty(aCols[n1Cnt,nPosObs])
+						lRet := .T. 
+					EndIf
+				Next
+				If	!lRet
+					Help(" ",1,"OBRIGAT2",,RetTitle("CO2_OBS"),4,1)
+				EndIf
+			EndIf
+		Else
+			If	aCols[nLinha,nPosRevo]=="S" .And.  Empty(aCols[nLinha,nPosObs])
+				Help(" ",1,"OBRIGAT2",,RetTitle("CO2_OBS"),4,1)
+				lRet := .F. 
+			EndIf
+			If	lRet .And.  aCols[nLinha,nPosRevo]=="S"
+
+				For n1Cnt := 1 To Len(aCols)
+
+					If	aCols[n1Cnt,nPosRevo]=="S" .Or.  aCols[n1Cnt,Len(aHeader)+1]
+						n2Cnt++
+					EndIf
+				Next
+			EndIf
+		EndIf
+		If	lRet .And.  n2Cnt==Len(aCols)
+			Help("",1,"GCP02NOITEM")
+			lRet := .F. 
+		EndIf
+	EndIf
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02Part(aPartic,nLinha,nOpc)
+Local nOpcao 	:= 0
+Local lRetPE, lRetOff
+Local cProd := ""
+Local i 	:= 0
+Local nP_Item := 0
+Local nP_Prod := 0
+Local nX := 0
+Local nP_ForCli := 0
+Local nP_Loj 	:= 0
+Local nP_Nom	:= 0
+Local nP_Lote	:= 0
+Local nP_VlUn	:= 0
+Local nPosTipo 	:= 0
+Local nOpcX		:= 0
+Local nCOLS		:= 0
+Local nPos 		:= 1
+Local cTitulo := "Consultar Participante"
+Local nPosProd := aScan(oGetEdt:aHeader,{|x| ALLTrim(x[2])=="CO2_CODPRO"})
+Local nPosLote := aScan(oGetEdt:aHeader,{|x| AllTrim(x[2])=="CO2_LOTE"})
+Local aArea := GetArea()
+Local aCols	:= {}
+Local aButAux := {}
+Local aButtons:= {}
+Local oDlg2
+Local lGCP02Par	:= Existblock("GCP02PAR")
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local lLtNew:= .F. 
+Local n1Cnt := 0
+Local n2Cnt := 0
+Local nPosQuant	:= GDFieldPos("CO2_QUANT",oGetEdt:aHeader)
+Local nPosPreco	:= GDFieldPos("CO2_VLESTI",oGetEdt:aHeader)
+Local nPosFrac	:= GDFieldPos("CO2_FRACAS",oGetEdt:aHeader)
+Local cChkCpo	:= ""
+Local aAlter    := {}
+
+aPartic := If( aPartic == nil, {}, aPartic ) ;
+nLinha := If( nLinha == nil, oGetEdt:nAt, nLinha ) ;
+nOpc := If( nOpc == nil, 3, nOpc ) ;
+
+if lPrjCni
+
+
+
+
+	If ExistBlock("GCPA02PBut")
+		aButAux := Execblock( "GCPA02PBut", .F. , .F.  )
+		If ValType( aButAux ) == "A"
+			aEval( aButAux, {|x| aAdd( aButtons, x ) } )
+		EndIf
+	EndIf
+EndIf
+
+cProd := oGetEdt:acols[nLinha,nPosProd]
+If !lPrjCni
+	cLote := oGetEdt:aCols[nLinha,nPosLote]
+Else
+	cLote := Space(TamSx3("CO2_LOTE")[1])
+EndIf
+
+If Empty(cProd)
+	Help("",1,"GCP02PRODIN")
+	Return
+Endif
+
+If oGetEdt:aCols[nLinha][Len(oGetEdt:aHeader)+1]
+	Aviso("GCP",If( cPaisLoc $ "ANG|PTG", "Não é permitido adicionar participantes com o artigo deletado.", "Não é permitido adicionar participantes com o produto deletado." ),{"Ok"})
+	Return
+EndIf
+
+If	nOpc == 4
+
+	CO2->(DbSetOrder(1))
+	For n1Cnt := 1 To Len(oGetEdt:aCols)
+		If	!GdDeleted(n1Cnt,oGetEdt:aHeader,oGetEdt:aCols) .And.  CO2->(DbSeek(xFilial("CO2")+M->CO1_CODEDT+M->CO1_NUMPRO+oGetEdt:aCols[n1Cnt,nPosProd]))
+
+			For n2Cnt := 1 To Len(oGetEdt:aHeader)
+				If	oGetEdt:aHeader[n2Cnt,10]<>"V" .And.  oGetEdt:aCols[n1Cnt,n2Cnt] <> CO2->(FieldGet(FieldPos(AllTrim(oGetEdt:aHeader[n2Cnt,2]))))
+					cChkCpo:=RetTitle(oGetEdt:aHeader[n2Cnt,2])
+					Exit
+				EndIf
+			Next
+			If	!Empty(cChkCpo)
+				Exit
+			EndIf
+
+		Else
+
+			cChkCpo:=STR0094
+			Exit
+		EndIf
+	Next
+
+	If	!Empty(cChkCpo)
+		If	!Iif(FindFunction("APMsgYesNo"), APMsgYesNo(STR0095+cChkCpo+STR0096, STR0057), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.(STR0095+cChkCpo+STR0096, STR0057)))
+			Return
+		EndIf
+	EndIf
+EndIf
+
+
+
+
+If lGCP02Par
+	Execblock("GCP02PAR", .F. , .F. ,{nOpc})
+EndIf
+
+cTitulo := cTitulo + If( cPaisLoc $ "ANG|PTG", " para o artigo: ", " para o produto: " )+cProd+Iif(!Empty(cLote),STR0090+cLote,"")
+aHeader	:= CriaHeader(nil,"CO3_FILIAL/CO3_CODEDT/CO3_NUMPRO/CO3_CODPRO",Nil,"CO3")
+nPosTipo 	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_TIPO"})
+nP_ForCli	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_CODIGO"})
+nP_Loj  	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LOJA"})
+nP_Nom 		:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_NOME"})
+nP_Lot		:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LOTE"})
+
+
+If M->CO1_MODALI == "LL"
+	aHeader[nPosTipo,11] := If( cPaisLoc $ "ANG|PTG", "1=Pré-Cliente;2=Cliente", "1=Pre-Cliente;2=Cliente" )
+Endif
+
+If	!Empty(cLote)
+	For n1Cnt := 1 To Len(aPartic)
+
+		nPosPart := aScan(aPartic[n1Cnt,2],{|x| Alltrim(x[nP_Lot]) == Alltrim(cLote) })
+
+		If nPosPart > 0
+			aCols := aPartic[n1Cnt][2]
+			Exit
+		EndIf
+
+	Next
+Else
+	nPosPart := aScan(aPartic,{|x| Alltrim(x[1]) == Alltrim(cProd) })
+	If nPosPart > 0
+		aCols := aPartic[nPosPart][2]
+	EndIf
+EndIf
+
+If Len(aCols) == 0
+	If nOpc == 3 .Or.  nOpc == 5
+		aCols := CriaAcols(aHeader,"CO3",1,xFilial("CO3")+M->(CO1_CODEDT+CO1_NUMPRO)+cProd,nOpc,nil,"CO3_ITEM","CO3_FILIAL+CO3_CODEDT+CO3_NUMPRO+CO3_CODPRO")
+	Else
+		GCPViewCO3("1",M->CO1_AVAL,M->CO1_CODEDT,M->CO1_NUMPRO,cProd,cLote,aHeader,aCols)
+	EndIf
+EndIf
+
+
+aColsSav := aClone(aCols)
+
+
+
+
+
+
+
+If nOpc == 3 .Or.  nOpc == 4 .Or.  nOpc == 5
+
+	if lPrjCni
+		nOpcX	:= 1+2
+
+		If ExistBlock("GCP2PART")
+			lRetPE := Execblock( "GCP2PART", .F. , .F. ,{M->CO1_CODEDT, M->CO1_NUMPRO,oGetEdt:aCols[oGetEdt:nAt, 1 ]} )
+
+			if ValType(lRetPE) == "L" .And.  lRetPE
+				nOpcX	:= 0
+			EndIf
+		EndIf
+	Else
+
+		If	oGetEdt:aCols[oGetEdt:nAt,nPosFrac]=="S"
+			cTitulo += " - "+STR0097
+			nOpcX := 0
+		Else
+			nOpcX := 1+2+4
+		EndIf
+	EndIf
+	aAlter := {"CO3_TIPO","CO3_CODIGO","CO3_LOJA","CO3_VLUNIT","CO3_PRZENT","CO3_REVOGA","CO3_OBS"}
+Else
+	nOpcX	:= 0
+EndIf
+
+If nOpc == 4 .And.  CO1->CO1_REMAN
+	nOpcX := 0
+Endif
+
+if lPrjCni
+	oDlg2 = MsDialog():New( 100, 10, 400, 700, cTitulo,,,.F., 128,,,, oMainWnd,.T.,, ,.T. )
+	oGetPart := MsNewGetDados():New(13,1,150,345,nOpcX,"GCP02LPart","","+CO3_ITEM/CO3_CODEDT/CO3_NUMPRO/CO3_CODPRO",,,999,,,,oDlg2,aHeader,aCols)
+	oGetPart:oBrowse:Align := 5
+	oDlg2:Activate( oDlg2:bLClicked, oDlg2:bMoved, oDlg2:bPainted,,,,{|Self|EnchoiceBar(oDlg2,{||nOpcao:=IIF(GCP02TPart(),1,2),IIF(nOpcao==1,oDlg2:End(),NIL)},{||oDlg2:End()},,aButtons)}, oDlg2:bRClicked, )
+Else
+	oDlg2 = MsDialog():New( 100, 10, 400, 700, cTitulo,,,.F., 128,,,, oMainWnd,.T.,, ,.T. )
+	oGetPart := MsNewGetDados():New(13,1,150,345,nOpcX,"GCP02LPart","","+CO3_ITEM/CO3_CODEDT/CO3_NUMPRO/CO3_CODPRO",aAlter,,999,,,,oDlg2,aHeader,aCols)
+	oGetPart:oBrowse:Align := 5
+	oDlg2:Activate( oDlg2:bLClicked, oDlg2:bMoved, oDlg2:bPainted,.T.,,,{|Self|EnchoiceBar(oDlg2,{||nOpcao:=IIF(GCP02TPart(),1,2),IIF(nOpcao==1,oDlg2:End(),NIL)},{||oDlg2:End()})}, oDlg2:bRClicked, )
+EndIf
+
+If nOpc <> 2 .And.  nOpcao == 1
+	If	!Empty(cLote)
+		If	Len(aPartic) > 0
+
+			lLtNew := .T. 
+			For n1Cnt := 1 To Len(aPartic)
+
+				nPosPart := aScan(aPartic[n1Cnt,2],{|x| Alltrim(x[nP_Lot]) == Alltrim(cLote) })
+
+				If	nPosPart > 0
+					lLtNew := .F. 
+
+					aPartic[n1Cnt][2] := aClone(oGetPart:aCols)
+
+				EndIf
+
+			Next
+
+			If	lLtNew
+
+				AAdd(aPartic,{ cProd, aClone(oGetPart:aCols) })
+			EndIf
+
+		Else
+
+			AAdd(aPartic,{ cProd, aClone(oGetPart:aCols) })
+
+
+			For n1Cnt := 1 To Len(oGetEdt:aCols)
+				If	! ( oGetEdt:aCols[n1Cnt,nPosProd]==cProd ) .And.  oGetEdt:aCols[n1Cnt,nPosLote]==cLote
+					AAdd(aPartic,{ oGetEdt:aCols[n1Cnt,nPosProd], aClone(oGetPart:aCols) })
+				EndIf
+			Next
+
+		EndIf
+	Else
+
+		If	M->CO1_AVAL=="1"
+
+			nPosPart := aScan(aPartic,{|x| Alltrim(x[1])  == Alltrim(cProd) })
+			If nPosPart > 0
+				aPartic[nPosPart][2] := aClone(oGetPart:aCols)
+			Else
+				AAdd(aPartic,{ cProd, aClone(oGetPart:aCols) })
+			EndIf
+
+		ElseIf M->CO1_AVAL=="3"
+
+
+			aPartic := {}
+			For n1Cnt := 1 To Len(oGetEdt:aCols)
+				AAdd(aPartic,{ oGetEdt:aCols[n1Cnt,nPosProd], aClone(oGetPart:aCols) })
+			Next
+
+		EndIf
+
+	EndIf
+Endif
+
+
+
+
+If ExistBlock("GCPA02ALT") .And.  nOpcao == 1
+	ExecBlock("GCPA02ALT", .F. , .F. ,{M->CO1_NUMPRO})
+EndIf
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02TPart()
+Local lRet := .T. 
+Local nX := 0
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local lRetAux := .F. 
+Local lGCP02TOK := iif ( lPrjCni, Existblock( "GCP02TOK" ), .F. )
+
+For nX :=  1 to Len(oGetPart:aCols)
+	If !GCP02LPart(nX)
+		lRet := .F. 
+		Exit
+	EndIf
+next
+
+if lPrjCni
+
+
+
+
+	If lRet .and.  lGCP02TOK
+		lRetAux := Execblock( "GCP02TOK", .F. , .F. , oGetPart:aCols )
+		If ValType( lRetAux ) == "L"
+	      lRet:= lRetAux
+		EndIf
+	EndIf
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02LPart(nLinha)
+Local lRet := .T. 
+Local aCols:= oGetPart:aCols
+Local aHeader:= oGetPart:aHeader
+
+Local nPosLote	:= aScan(oGetEdt:aHeader,{|x| AllTrim(x[2])=="CO2_LOTE"})
+Local nPosPreco	:= aScan(oGetEdt:aHeader,{|x| AllTrim(x[2])=="CO2_VLESTI"})
+Local nPosQuant := aScan(oGetEdt:aHeader,{|x| AllTrim(x[2])=="CO2_QUANT"})
+
+Local nPosTip:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_TIPO"})
+Local nPosVlU:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_VLUNIT"})
+Local nPosCod:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_CODIGO"})
+Local nPosLoj:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LOJA"})
+Local nP_Lote:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LOTE"})
+Local nP_Revo:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_REVOGA"})
+Local nP_Obs := aScan(aHeader,{|x| AllTrim(x[2])=="CO3_OBS"})
+Local lPrjCni:= FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local n1Cnt  := 0
+Local nVlEsti:= 0
+nLinha := If( nLinha == nil, oGetPart:nAt, nLinha ) ;
+
+If Valtype(nLinha) <> "N"
+	nLinha := oGetPart:nAt
+EndIf
+
+If aCols[nLinha,len(aCols[nLinha])] <> .T. 
+	If lRet .And.  aCols[nLinha,nPosVlU] == 0 .Or.  Empty(aCols[nLinha,nPosCod]) .Or.  Iif( aCols[nLinha,nPosTip] == "2" .And.  Empty(aCols[nLinha,nPosLoj]) , .T.  , .F. )
+		Help("",1,"GCP02NOVL")
+		lRet := .F. 
+	Endif
+
+	If	lRet .And.  aCols[nLinha,nP_Revo]=="1" .And.  Empty(aCols[nLinha,nP_Obs])
+		Help(" ",1,"OBRIGAT2",,RetTitle("CO3_OBS"),4,1)
+		lRet := .F. 
+	EndIf
+
+	If	lRet .And.  !lPrjCni
+		If	(M->CO1_AVAL=="2" .Or.  M->CO1_AVAL=="3")
+			If	M->CO1_AVAL=="2" .And.  !Empty(cLote)
+				For n1Cnt := 1 To Len(oGetEdt:aCols)
+					If	oGetEdt:aCols[n1Cnt,nPosLote]==cLote
+						nVlEsti += ( oGetEdt:aCols[n1Cnt,nPosPreco]*oGetEdt:aCols[n1Cnt,nPosQuant] )
+					EndIf
+				Next
+			ElseIf	M->CO1_AVAL=="3"
+				For n1Cnt := 1 To Len(oGetEdt:aCols)
+					nVlEsti += ( oGetEdt:aCols[n1Cnt,nPosPreco]*oGetEdt:aCols[n1Cnt,nPosQuant] )
+				Next
+			EndIf
+
+			If	M->CO1_MODALI=="LL"
+				If	aCols[nLinha,nPosVlU] < nVlEsti
+					Help("",1,"GCP02ESTI",,STR0102+Transform(nVlEsti,PesqPict("CO3","CO3_VLUNIT")),4,1)
+					lRet := .F. 
+				EndIf
+			Else
+				If	aCols[nLinha,nPosVlU] > nVlEsti
+					Help("",1,"GCP02ESTI",,STR0103+Transform(nVlEsti,PesqPict("CO3","CO3_VLUNIT")),4,1)
+					lRet := .F. 
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+
+EndIf
+
+If	lRet .And.  !lPrjCni
+	oGetPart:aCols[nLinha,nP_Lote]:=cLote
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function  GCP02Com(aComiss,nOpc)
+Local oDlg3
+Local nOpcao := 0
+Local i := 0
+Local nX := 0
+Local cTitulo := If( cPaisLoc $ "ANG|PTG", "Adicionar Membro da Comissão", "Adicionar Membro da Comissao" )
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local aArea := GetArea()
+Local aCols	:= {}
+Local nOpcX	:= 0
+Local lRetOff, lRetPE
+Private oGetComiss
+
+aComiss := If( aComiss == nil, {}, aComiss ) ;
+nOpc := If( nOpc == nil, 3, nOpc ) ;
+
+If nOpc == 3 .Or.  nOpc == 5 .Or.  nOpc == 4
+	nOpcX := 1+4+2
+EndIf
+
+if lPrjCni
+	if ExistBlock("GCP2COMI")
+		lRetPE := Execblock( "GCP2COMI", .F. , .F. ,{M->CO1_CODEDT, M->CO1_NUMPRO,oGetEdt:aCols[oGetEdt:nAt, 1 ]} )
+
+		if ValType(lRetPE) == "L" .And.  lRetPE
+			nOpcX	:= 0
+		EndIf
+
+	EndIf
+EndIf
+
+aHeadCom	:= CriaHeader(nil,"CO9_NUMPRO/CO9_CODEDT",Nil,"CO9")
+If Len(aComiss) == 0
+	aCOLSCom	:= CriaAcols(aHeadCom,"CO9",1,xFilial("CO9")+M->(CO1_CODEDT+CO1_NUMPRO),nOpc,nil,"CO9_ITEM","CO9_FILIAL+CO9_CODEDT+CO9_NUMPRO")
+Else
+	aCOLSCom := aClone(aComiss)
+EndIf
+
+oDlg3 = MsDialog():New( 100, 10, 400, 700, cTitulo,,,.F., 128,,,, oMainWnd,.T.,, ,.T. )
+
+oGetComiss := MsNewGetDados():New(13,1,150,345,nOpcX,"GCP02LCom()","","+CO9_ITEM",,,999,,,,oDlg3,aHeadCom,aCOLSCom)
+oGetComiss:oBrowse:Align := 5
+oDlg3:Activate( oDlg3:bLClicked, oDlg3:bMoved, oDlg3:bPainted,,,,{|Self|EnchoiceBar(oDlg3,{||nOpcao:=IIF(GCP02TCom(),1,2),IIF(nOpcao==1,oDlg3:End(),NIL)},{||oDlg3:End()})}, oDlg3:bRClicked, )
+
+If nOpcao==1
+	aComiss:= {}
+	aComiss:= aClone(oGetComiss:aCOLS)
+Endif
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02TCom()
+Local lRet := .T. 
+Local nX := 0
+
+For nX :=  1 to Len(oGetComiss:aCols)
+	If !GCP02LCom(nX)
+		lRet := .F. 
+		Exit
+	EndIf
+next
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02OKGe()
+Local lRet := .T. 
+Local nX := 0
+
+For nX :=  1 to Len(oGetComiss:aCols)
+	If !GCP02LCom(nX)
+		lRet := .F. 
+		Exit
+	EndIf
+next
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02LCom(nLinha)
+Local lRet := .T. 
+Local aCols := oGetComiss:aCols
+Local aHeader := oGetComiss:aHeader
+Local nPosNome := aScan(aHeader,{|x| AllTrim(x[2])=="CO9_NOME"})
+Local nPosEmail := aScan(aHeader,{|x| AllTrim(x[2])=="CO9_EMAIL"})
+nLinha := If( nLinha == nil, oGetComiss:nAt, nLinha ) ;
+
+If Valtype(nLinha) <> "N"
+	nLinha := oGetComiss:nAt
+EndIf
+
+
+If !aCols[nLinha][Len(aHeader)+1]
+	If Empty(aCols[nLinha,nPosNome])
+		Help("",1,"GCP02NONOME")
+		lRet := .F. 
+	Endif
+
+	If Empty(aCols[nLinha,nPosEmail])
+		Help("",1,"GCP02NOMAIL")
+		lRet := .F. 
+	ElseIf At("@",TRIM(aCols[nLinha,nPosEmail])) == 0
+		Help("",1,"GCP02MAIL")
+		lRet := .F. 
+	Endif
+Endif
+
+Return( lRet )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Can()
+Local lRetPE
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local aGrvCO1  := {}
+Local aGrvCO7  := {}
+Local cCO7Acao := ""
+Local cMotivo  := Space(200)
+Local aRet     := {}
+Local aParam   := {}
+Local lOk      := .T. 
+LOCAL aArea	   := GetArea()
+
+
+If SC7->(IndexKey(20)) == "C7_FILIAL+C7_CODED+C7_NUMPR"
+	SC7->(dbSetOrder(20))
+ElseIf SC7->(IndexKey(21)) == "C7_FILIAL+C7_CODED+C7_NUMPR"
+	SC7->(dbSetOrder(21))
+EndIf
+
+If CO1->CO1_ETAPA $ "PE,PC,FV,CO,PM,PR,CE" .Or.  SC7->(dbSeek(xFilial("SC7")+CO1->(CO1_CODEDT+CO1_NUMPRO)))
+	Help("",1,"GCP02NOCAN")
+	lOk  := .F. 
+Endif
+
+if lOk .And.  lPrjCni
+	If	ExistBlock("GCP2CANC")
+		lRetPE := Execblock( "GCP2CANC", .F. , .F. ,{CO1->CO1_CODEDT, CO1->CO1_NUMPRO} )
+
+		if ValType(lRetPE) == "L" .And.  lRetPE
+			lOk := !lRetPE
+		EndIf
+	EndIf
+EndIf
+
+If lOk .And.  (lOk := Iif(FindFunction("APMsgYesNo"), APMsgYesNo("Confirma o cancelamento deste edital?", cCadastro), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.("Confirma o cancelamento deste edital?", cCadastro))))
+
+
+	AAdd(aRet,cMotivo)
+
+
+	AAdd(aParam,{1,"Motivo do Cancelamento",aRet[1],"@!","","","",125, .T. })
+
+
+	lOk := ParamBox(aParam,"Motivo",@aRet,,, .T. ,80,3)
+
+	If lOk .And.  !Empty(aRet[1])
+
+		Begin Sequence; BeginTran()
+
+		cMotivo := aRet[1]
+
+		cCO7Acao := "Passo: " + CO1->CO1_PASSO + chr(13)+chr(10)
+		cCO7Acao += "Cancelamento do Edital" + chr(13)+chr(10)
+		cCO7Acao += "Motivo: " + chr(13)+chr(10) + cMotivo + chr(13)+chr(10)
+
+		aGrvCO1 := {	{"CO1_ETAPA" , "PE"      }}
+
+
+
+
+
+
+
+
+
+		aGrvCO7 := {	{"CO7_CODEDT", CO1->CO1_CODEDT}, {"CO7_NUMPRO", CO1->CO1_NUMPRO}, {"CO7_DTMOV" , dDataBase}, {"CO7_HRMOV" , Time()}, {"CO7_CODUSU", Upper(Alltrim(Substr(cUsuario,7,15)))}, {"CO7_MOVATU", CO1->CO1_ETAPA}, {"CO7_DESATU", Posicione("SX5",1,xFilial("SX5")+"LE"+CO1->CO1_ETAPA,"X5_DESCRI")}, {"CO7_ACAO"  , cCO7Acao }, {"CO7_PASATU", CO1->CO1_PASSO}}
+		GCPA006(aGrvCO7, aGrvCO1)
+
+
+
+		If SC1->(IndexKey(7)) == "C1_FILIAL+C1_CODED+C1_NUMPR+C1_PRODUTO+C1_NUM+C1_ITEM"
+			SC1->(dbSetOrder(7))
+		ElseIf SC1->(IndexKey(8)) == "C1_FILIAL+C1_CODED+C1_NUMPR+C1_PRODUTO+C1_NUM+C1_ITEM"
+			SC1->(dbSetOrder(8))
+		EndIf
+		While SC1->(dbSeek(xFilial("SC1")+CO1->(CO1_CODEDT+CO1_NUMPRO)))
+			RecLock("SC1", .F. )
+			SC1->C1_CODED:= ""
+			SC1->C1_NUMPR:= ""
+			SC1->C1_MODAL:= ""
+			SC1->C1_TPMOD:= ""
+			SC1->C1_COTACAO	:= ""
+			SC1->(MsUnLock())
+
+			If lPrjCni
+
+				RSTSCLOG("EDT",2,)
+			EndIf
+		EndDo
+
+
+
+		If SC8->(IndexKey(6)) == "C8_FILIAL+C8_CODED+C8_NUMPR"
+			SC8->(dbSetOrder(6))
+		ElseIf SC8->(IndexKey(7)) == "C8_FILIAL+C8_CODED+C8_NUMPR"
+			SC8->(dbSetOrder(7))
+		EndIf
+		While SC8->(DbSeek(xFilial("SC8")+CO1->CO1_CODEDT+CO1->CO1_NUMPRO))
+			RecLock("SC8", .F. )
+			SC8->C8_CODED := ""
+			SC8->C8_NUMPR := ""
+			SC8->(MsUnLock())
+		EndDo
+		EndTran(); end
+
+	Else
+		Help("",1,"GCP02CAN")
+	Endif
+Else
+	Help("",1,"GCP02CAN")
+EndIf
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Scm(cAlias,nReg,nOpc)
+Local aArea		:= GetArea()
+Local lPrjCni		:= FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local aDados		:= {}
+Local cPerg		:= "GCPA02"
+Local cCodEdt		:= ""
+Local cNumPro		:= ""
+Local cModali		:= ""
+Local cTipo		:= ""
+Local cRegra		:= ""
+Local cModalAtu 	:= Upper(CO1->CO1_MODALI)
+Local lRet		:= .T. 
+
+lRemanescente := (nOpc == 13)
+
+If lPrjCni
+	If ExistBlock("GCP2SOLI")
+		Execblock( "GCP2SOLI", .F. , .F. )
+	EndIf
+EndIf
+
+AjustaSX1( .T. ,cPerg)
+
+If Pergunte(cPerg, .T. )
+	cCodEdt:= CriaVar("CO1_CODEDT", .T. )
+	cNumPro:= CriaVar("CO1_NUMPRO", .T. )
+	cModali:= Iif(Empty(mv_par01) .And.  mv_par01 == "LL" ,CriaVar("CO1_MODALI", .T. ),mv_par01)
+	cTipo	:= Iif(Empty(mv_par02),CriaVar("CO1_TIPO", .T. )  ,mv_par02)
+  	cRegra	:= Iif(Empty(mv_par03),CriaVar("CO1_REGRA", .T. ) ,mv_par03)
+
+	If	lRemanescente
+
+
+
+		If	!(cModali == cModalAtu)
+			If	(cModali == "LL" .Or.  cModalAtu == "LL")
+				Help("",1,"GCP02MODAL")
+				lRet := .F. 
+			EndIf
+		EndIf
+		If	lRet
+			GCPA02Edital(cAlias,nReg,nOpc,aDados,cCodEdt,cNumPro,cModali,cTipo,cRegra)
+		EndIf
+	Else
+		If  cModali == "LL"
+			Help("",1,"GCPA02MDLL")
+			lRet := .F. 
+		Else
+			If ExistChav("CO1",cCodEdt+cNumPro)
+				aDados := GCP02SelSC(nOpc)
+				If Len(aDados) > 0
+					GCPA02Edital(cAlias,nReg,nOpc,aDados,cCodEdt,cNumPro,cModali,cTipo,cRegra)
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+Else
+	lRet := .F. 
+EndIf
+
+RestArea(aArea)
+Return(lRet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCP02Solic(aSolic,nOpc,lConsSolic)
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local nPosProd  := aScan(oGetEdt:aHeader,{|x| Trim(x[2])=="CO2_CODPRO"})
+Local nPosQEdt  := aScan(oGetEdt:aHeader,{|x| Trim(x[2])=="CO2_QUANT"} )
+Local nPosOrig  := iif (lPrjCni,  aScan(oGetEdt:aHeader,{|x| Trim(x[2])=="CO2_ORIG"}  ), 0)
+
+Local nPosSolic := 0
+Local nLinha	:= oGetEdt:nAT
+Local cProduto  := oGetEDt:aCols[nLinha,nPosProd]
+Local cEdital	:= M->CO1_CODEDT
+Local cProcesso	:= M->CO1_NUMPRO
+Local nX		:= 0
+Local aDados    := {}
+Local aHeadC1 	:= CriaHeader(Nil,Nil,Nil,"SC1")
+Local nPosQSc 	:= aScan(aHeadC1,{|x| Trim(x[2])=="C1_QUANT"})
+Local aSolAux 	:= {}
+Local nQtde		:= 0, nQtTst, nQtPE
+Local lClick	:= nOpc == 5
+Local lGCP2QTSC := iif (lPrjCni, Existblock( "GCP2QTSC"), .F. )
+
+nPosSolic := aScan(aSolic ,{|x| Alltrim(x[1]) == Alltrim(cProduto) })
+
+If nPosSolic > 0
+	aSolAux := aSolic[nPosSolic][2]
+EndIf
+
+if lPrjCni
+	aDados := GCP02SelSC(nOpc,cProduto,cEdital,cProcesso,aSolAux,lClick,!lConsSolic)
+
+	If Existblock( "GCP2GRDS")
+		Execblock( "GCP2GRDS", .F. , .F.  , {aDados})
+	EndIf
+Else
+	aDados := GCP02SelSC(nOpc,cProduto,cEdital,cProcesso,aSolAux,lClick)
+EndIf
+
+If !Empty(aDados)
+	For nX:= 1 To Len(aDados)
+		If nOpc == 5
+			If aDados[nX,1]
+				nQtde += aDados[nX,nPosQSc + 1]
+			Endif
+		Else
+			If !aDados[nX,1]
+				nQtde += aDados[nX,nPosQSc + 1]
+			Endif
+		EndIf
+	next
+
+	if lPrjCni
+		if lGCP2QTSC
+
+
+			aRetPE := Execblock( "GCP2QTSC", .F. , .F.  , {  lConsSolic, nQtde, M->CO1_CODEDT,	M->CO1_NUMPRO, M->CO1_MODALI, M->CO1_TIPO, oGetEdt:aCols[nLinha, 1 ], oGetEDt:aCols[nLinha,nPosProd],   oGetEdt:aCols[nLinha, nPosQEdt ]})
+
+    		If ValType(aRetPE) == "A" .And.  ValType(aRetPE[1]) == "N" .and.  ValType(aRetPE[2]) == "N"
+	    		oGetEdt:aCols[nLinha, nPosQEdt ] := aRetPE[1]
+	    		oGetEdt:aCols[nLinha, nPosOrig ] := aRetPE[2]
+		    EndIf
+
+		EndIf
+	Else
+		oGetEdt:aCols[nLinha, nPosQEdt ]:= nQtde
+	EndIf
+
+	If oGetEdt:aCols[nLinha, nPosQEdt ] > 0
+		oGetEdt:aCols[nLinha, Len(oGetEdt:aHeader)+1 ] := .F. 
+	Else
+		oGetEdt:aCols[nLinha, Len(oGetEdt:aHeader)+1 ] := .T. 
+	EndIf
+
+	oGetEdt:ForceRefresh()
+
+	If nPosSolic > 0
+		aSolic[nPosSolic][2] := aClone(aDados)
+	Else
+		AAdd(aSolic,{ cProduto, aClone(aDados) })
+	EndIf
+EndIf
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCP02SelSC(nOpc,cProduto,cEdital,cProcesso,aSolC,lClick, lWndManutEdit)
+Local oDlg
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local cTitulo  := "Solicitações de compra"
+Local aHeadC1 	:= CriaHeader(Nil,Nil,Nil,"SC1")
+Local nX
+Local aVetor		:= {}
+Local aTam			:= {}
+Local aCmbItens		:= {}
+Local aCmbOrdem		:= {}
+Local nOpcX			:= 0
+Local nCmbOp		:= 1
+Local cPesq			:= Space(100)
+Local cCombo		:= ""
+Local aDados		:= {}
+Local nNumSc	:= aScan(aHeadC1,{|x| Trim(x[2])=="C1_NUM"})
+Local nItemSc	:= aScan(aHeadC1,{|x| Trim(x[2])=="C1_ITEM"})
+Local nProdSc	:= aScan(aHeadC1,{|x| Trim(x[2])=="C1_PRODUTO"})
+Local nDescrSc	:= aScan(aHeadC1,{|x| Trim(x[2])=="C1_DESCRI"})
+Local aRet 		:= {}
+Local cQuery 	:= ""
+Local cAliasTmp := GetNextAlias()
+Local nY		:= 0
+Local lRet		:= .T. 
+Local aArea		:= GetArea()
+Local cQrTst, cQrOk
+Local lGCP02Fil		:=  Existblock( "GCP02Fil" )
+Local aFilter		:= {}
+Local aRetFil		:= {}
+Local cTpCto        := IIf (lPrjCni, GETMV("MV_TPSCCT"), .F. )
+Local aVetTst       := {}
+Local aButtons		:= {}
+
+Private oOk      	:= LoadBitmap( GetResources(), "LBOK" )
+Private oNo      	:= LoadBitmap( GetResources(), "LBNO" )
+Private oLbx
+Private aTitulo := {}
+lWndManutEdit := If( lWndManutEdit == nil, .F. , lWndManutEdit ) ;
+nOpc := If( nOpc == nil, 5, nOpc ) ;
+cProduto := If( cProduto == nil, "", cProduto ) ;
+cEdital := If( cEdital == nil, "", cEdital ) ;
+cProcesso := If( cProcesso == nil, "", cProcesso ) ;
+aSolC := If( aSolC == nil, {}, aSolC ) ;
+lClick := If( lClick == nil, .T. , lClick ) ;
+
+if lPrjCni
+	if lWndManutEdit
+		aSolC := {}
+	EndIf
+EndIf
+
+If nOpc == 5
+
+	if lPrjCni
+		cQuery := " SELECT SC1.* "
+		cQuery += " FROM " + RetSqlTab("SC1")
+		cQuery += " WHERE SC1.C1_CODED = '' "
+		cQuery += " AND SC1.C1_NUMPR = '' "
+		cQuery += " AND SC1.C1_QUJE = 0 "
+		cQuery += " AND SC1.C1_TPSC = '2'"
+		cQuery += " AND SC1.C1_QUANT > 0"
+		cQuery += " AND SC1.C1_RESIDUO <> 'S'"
+		cQuery += " AND SC1.C1_APROV NOT IN ('R','B')"
+		cQuery += " AND SC1.C1_XTIPOSC <> '"+cTpCto+"' "
+
+		If lWndManutEdit .And.  ExistBlock("GCP2SQLS")
+			cQrTst := Execblock( "GCP2SQLS", .F. , .F. ,{cEdital, cProcesso, cProduto, cTpCto, cQuery} )
+
+			if ValType(cQrTst) == "C"
+       	    	cQuery := cQrTst
+			EndIf
+		EndIf
+
+    	Else
+		cQuery := " SELECT * "
+		cQuery += " FROM " + RetSqlTab("SC1")
+		cQuery += " WHERE C1_CODED = '' "
+		cQuery += " AND C1_NUMPR = '' "
+		cQuery += " AND C1_QUJE = 0 "
+		cQuery += " AND C1_TPSC = '2'"
+		cQuery += " AND C1_QUANT > 0"
+		cQuery += " AND C1_RESIDUO <> 'S'"
+		cQuery += " AND C1_APROV NOT IN ('R','B')"
+    	EndIf
+
+
+
+
+	If lGCP02Fil
+		cQuery += Execblock( "GCP02Fil", .F. , .F.  )
+	EndIf
+
+	cQuery += " AND " + RetSQLCond("SC1")
+Else
+	if lPrjCni
+		cQuery := " SELECT SC1.* "
+		cQuery += " FROM " + RetSqlTab("SC1")
+		cQuery += " WHERE SC1.C1_CODED = '" +cEdital + "' "
+		cQuery += " AND SC1.C1_NUMPR = '" + cProcesso + "' "
+		cQuery += " AND SC1.C1_PRODUTO = '" + cProduto + "' "
+		cQuery += " AND SC1.C1_XTIPOSC <> '"+cTpCto+"' "
+	Else
+		cQuery := " SELECT * "
+		cQuery += " FROM " + RetSqlTab("SC1")
+		cQuery += " WHERE C1_CODED = '" +cEdital + "' "
+		cQuery += " AND C1_NUMPR = '" + cProcesso + "' "
+		cQuery += " AND C1_PRODUTO = '" + cProduto + "' "
+        EndIf
+
+
+
+
+	If lGCP02Fil
+		cQuery += Execblock( "GCP02Fil", .F. , .F.  )
+	EndIf
+
+	cQuery += " AND " + RetSQLCond("SC1")
+EndIf
+
+cQuery := ChangeQuery(cQuery)
+IncProc(If( cPaisLoc $ "ANG|PTG", "A Seleccionar as Solicitações de Compra...", "Selecionando as Solicitações de Compra..." ))
+dbUseArea( .T. ,"TOPCONN",TcGenQry(,,cQuery),cAliasTmp, .T. , .F. )
+
+If (cAliasTmp)->(!Eof())
+	TcFieldAll(cAliasTmp)
+	While (cAliasTmp)->(!Eof())
+		aVetor:= {}
+
+		if lPrjCni
+			if lWndManutEdit
+				if ExistBlock("GCP2HEAD")
+			   		aVetTst = Execblock( "GCP2HEAD", .F. , .F.  , {(cAliasTmp)->(C1_NUMPR), aVetor} )
+
+			   		if ValType(aVetTst) == "A"
+			 			aVetor := aVetTst
+			   		EndIf
+				EndIf
+			else
+				aAdd( aVetor, .F.  )
+			EndIf
+		Else
+			aAdd( aVetor, .F.  )
+		EndIf
+
+		For nY:= 1 To Len(aHeadC1)-2
+			If	!Empty((cAliasTmp)->( FieldGet(FieldPos(aHeadC1[nY,2] ) ) ))
+				aAdd( aVetor, (cAliasTmp)->( FieldGet(FieldPos(aHeadC1[nY,2] ) ) ) )
+			Else
+				AAdd( aVetor, CriaVar(aHeadC1[nY,2]))
+			EndIf
+		next
+		aAdd( aDados , aVetor )
+		(cAliasTmp)->(dbSkip())
+	End
+ElseIf !Empty(xFilial("SC1")) .And.  FindFunction("MaComCent") .And.  SC1->(FieldPos("C1_COMPRAC")) > 0
+	If (lRet := Iif(FindFunction("APMsgYesNo"), APMsgYesNo(STR0084,), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.(STR0084,))))
+		GCP02ComCe(oLbx,cQuery,lWndManutEdit,@aDados)
+        If Len(aDados) == 0
+			(cAliasTmp)->(DbCloseArea())
+			lRet := .F. 
+		EndIf
+	EndIf
+Else
+	Help("",1,"GCP02SOLIC")
+	(cAliasTmp)->(DbCloseArea())
+	lRet := .F. 
+EndIf
+
+If lRet
+
+
+
+	aAdd( aTitulo, "" )
+	aAdd( aTam, 10 )
+	For nX:= 1 To Len(aHeadC1)
+		If !("_WT" $ aHeadC1[nX,2])
+			aAdd( aTitulo, aHeadC1[nX,1] )
+			aAdd( aTam, GetTextWidth( 0, Replicate( ";", 5+Max( TamSX3( aHeadC1[nX,2] )[1], Len( aHeadC1[nX,1] ) ) ) ) )
+		EndIf
+	Next
+
+
+
+	oDlg = MsDialog():New( 0, 0, 300, 700, cTitulo,,,.F.,,,,,,.T.,, ,.F. )
+
+
+	oTPane1 := TPanel():New(0,0,"",oDlg,NIL, .T. , .F. ,NIL,NIL,0,16, .T. , .F. )
+	oTPane1:Align := 3
+
+
+	aAdd(aCmbItens, aHeadC1[nNumSc ,  1] + " + " + aHeadC1[nItemSc ,1])
+	aAdd(aCmbItens, aHeadC1[nProdSc , 1])
+	aAdd(aCmbItens, aHeadC1[nDescrSc, 1])
+
+	aAdd( aFilter, { 1, If( cPaisLoc $ "ANG|PTG", "Número da SC de", "Numero da SC de" ), Space(6), "@!", "", "SC1", "", 40, .F.  } )
+	aAdd( aFilter, { 1, If( cPaisLoc $ "ANG|PTG", "Número da SC até", "Numero da SC ate" ), Space(6), "@!", "", "SC1", "", 40, .F.  } )
+	 oCombo := TComboBox():New( 03, 03, { | u | If( PCount() == 0, cCombo, cCombo := u ) }, aCmbItens, 100, 20, oTPane1,,{|Self|(nCmbOp:=oCombo:nAt)},,,,.T.,,,.F.,,.F.,,, ,"cCombo" )
+	 TGet():New( 03, 105, { | u | If( PCount() == 0, cPesq, cPesq := u ) },oTPane1, 100, 09,,,,,,.F.,,.T.,,.F.,,.F.,.F.,,.F.,.F. ,,"cPesq",,,, )
+	 TButton():New( 03, 207, "Buscar", oTPane1,{||  (oLbx:nAt:=BuscaScm(aDados,cPesq,oLbx:nAt,nCmbOp,aHeadC1),oLbx:Refresh())}, 35, 11,,,.F.,.T.,.F.,,.F.,,,.F. )
+	 TButton():New( 03, 244, "'Filtro'", oTPane1,{||  (If(ParamBox(aFilter,"Filtro recursivo",@aRetFil),GCAFilter(@aDados,aHeadC1,aRetFil,cAliasTmp),Nil))}, 35, 11,,,.F.,.T.,.F.,,.F.,,,.F. )
+
+
+	oLbx := TwBrowse():New(0,0,0,0,,aTitulo,,oDlg,,,,,,,,,,,, .F. ,, .T. ,, .F. ,,,)
+	oLbx:Align := 5
+	oLbx:aColSizes := aTam
+	oLbx:SetArray( aDados )
+	If lClick
+		oLbx:bLDblClick := {|| aDados[oLbx:nAt,1] := !aDados[oLbx:nAt,1],oLbx:Refresh()}
+	EndIf
+
+	oLbx:bLine := GCAbLine( aDados )
+
+
+
+
+
+	olbx:bheaderclick := { |x,y| If( Len( aDados )== 0, Alert( If( cPaisLoc $ "ANG|PTG", "Não existem dados para selecção", "Não existe dados para seleção" ) ), If( y == 1, GCAMarkAll( @aDados ), Nil ) ) }
+
+	If FindFunction("MaComCent") .And.  SC1->(FieldPos("C1_COMPRAC")) > 0
+		aAdd(aButtons,{"PROJETPMS",{|| GCP02ComCe(oLbx,cQuery,lWndManutEdit,@aDados)},STR0085})
+	EndIf
+
+	oDlg:Activate( oDlg:bLClicked, oDlg:bMoved, oDlg:bPainted,.T.,,,{|Self|EnchoiceBar(oDlg,{||(oDlg:End(),nOpcX:=1)},{||oDlg:End()},,aButtons)}, oDlg:bRClicked, )
+
+	If nOpcX == 1
+		aRet := aClone(aDados)
+	EndIf
+
+EndIf
+
+If Select(cAliasTmp) > 0
+	(cAliasTmp)->(DbCloseArea())
+EndIf
+
+RestArea(aArea)
+Return aRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function BuscaScm(aDados,cPesq,nPosAtu,nIndex,aHeadC1)
+Local nPos
+
+
+
+
+If nIndex == 1
+	nPos:= aScan(aDados,{|x| RTrim(cPesq) $ RTrim(x[aScan(aHeadC1,{|x| Trim(x[2])=="C1_NUM"}) + 1]) + RTrim(x[aScan(aHeadC1,{|x| Trim(x[2])=="C1_ITEM"}) + 1])},nPosAtu + 1)
+ElseIf nIndex == 2
+	nPos:= aScan(aDados,{|x| RTrim(cPesq) $ RTrim(x[aScan(aHeadC1,{|x| Trim(x[2])=="C1_PRODUTO"}) + 1])},nPosAtu + 1)
+ElseIf nIndex == 3
+	nPos:= aScan(aDados,{|x| RTrim(cPesq) $ RTrim(x[aScan(aHeadC1,{|x| Trim(x[2])=="C1_DESCRI"}) + 1])},nPosAtu + 1)
+EndIf
+
+If nPos == 0
+	Help("",1,"GCP02BUS")
+	nPos:= 1
+Endif
+
+Return nPos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02TF31()
+
+
+
+aTrocaF3 := {}
+
+If ( M->CO1_TPAPR1 == "2" )
+	AAdd(aTrocaF3,{"CO1_APROV1","CO5"})
+EndIf
+If ( M->CO1_TPAPR2 == "2" )
+	AAdd(aTrocaF3,{"CO1_APROV2","CO5"})
+EndIf
+
+Return( .T. )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02ComEmail(cEdital , cNumPro )
+Local aArea := GetArea()
+Local oHTML := Nil
+Local cArqDot := "EMAILCOMIS.HTM"
+Local cPathDot:= AllTrim(GETMV("MV_GCPDOT",,"\samples\documents\gcp\dot\"))
+Local cFile   := cPathDot + cArqDot
+Local lEnvRet := .T. 
+Local cFileHTML := CriaTrab( NIL , .F.  ) + ".htm"
+Local cAssunto := "Convocação de Comissão"
+Local cMsg	   := ""
+
+cNumPro := Alltrim(cNumPro)
+
+CO9->(dbSetOrder(1))
+If CO9->(dbSeek(xFilial("CO9") + cEdital + cNumPro ))
+	If Aviso(cCadastro,"Deseja enviar e-mail de aviso para os participantes da comissão?",{"Sim","Não"},2,"Comissão") == 1
+		If File(cFile)
+			While CO9->(!EOF()) .And.  Alltrim(CO9->(CO9_FILIAL+CO9_CODEDT+CO9_NUMPRO)) == Alltrim(xFilial("CO9") + cEdital + cNumPro)
+				oHTML := TWFHTML():New( cFile )
+				oHTML:ValByName( "cCodEdt", cEdital     )
+				oHTML:ValByName( "cNumPro", cNumPro     )
+				oHTML:ValByName( "cNome" , CO9->CO9_NOME)
+				oHTML:SaveFile( cFileHTML )
+				cMsg := WFLoadFile(cFileHTML)
+				cMsg := StrTran(cMsg,chr(13),"")
+				cMsg := StrTran(cMsg,chr(10),"")
+				lEnvRet := SetMail(CO9->CO9_EMAIL,cAssunto,cMsg)
+
+				FErase( (cFileHTML) )
+				If !lEnvRet
+					Help("",1,"GCP02EMAIL")
+					Exit
+				EndIf
+				CO9->(DBSKIP())
+			EndDo
+			If lEnvRet
+				Help("",1,"GCP02OKMAIL")
+			EndIf
+		Else
+			Help("",1,"GCP02ARQMAIL")
+		EndIf
+	EndIf
+EndIf
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02VldFor()
+
+Local lRet     := .T. 
+Local i        := 0
+Local nT_aCOLS := Len(oGetPart:aCOLS)
+Local nItem    := oGetPart:oBrowse:nAt
+Local nP_Tip   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_TIPO"})
+Local nP_For   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_CODIGO"})
+Local nP_Loj   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_LOJA"})
+Local nP_Nom   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_NOME"})
+Local nP_Lote  := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_LOTE"})
+Local cTipo    := ""
+Local cForn    := ""
+Local cLoj	   := ""
+Local cForCli  := "F"
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+
+cTipo    := oGetPart:aCOLS[n,nP_Tip]
+cForn    := oGetPart:aCOLS[n,nP_For]
+cLoj     := oGetPart:aCOLS[n,nP_Loj]
+
+If "CO3_LOJA" $ ReadVar()
+	cLoj:= &(ReadVar())
+Else
+	If	cTipo == "1"
+		cForn := M->CO3_CODIGO
+	ElseIf "CO3_CODIGO" $ ReadVar()
+		cForn:= &(ReadVar())
+	EndIf
+EndIf
+
+If M->CO1_MODALI == "LL"
+	cForCli  := "C"
+Endif
+
+
+
+
+If cTipo == "2"
+	If !Empty(cLoj)
+		If cForCli == "F"
+			oGetPart:aCOLS[n,nP_Loj] := Posicione("SA2",1,xFilial("SA2")+cForn+cLoj,"A2_LOJA")
+			oGetPart:aCOLS[n,nP_Nom] := Posicione("SA2",1,xFilial("SA2")+cForn+cLoj,"A2_NOME")
+			If SA2->(Eof())
+				Help("",1,"GCP02FORC")
+				lRet := .F. 
+			Endif
+			If SA2->A2_MSBLQL == "1"
+				Help("",1,"GCP02FORB")
+				lRet := .F. 
+			EndIf
+		Else
+			oGetPart:aCOLS[n,nP_Loj] := Posicione("SA1",1,xFilial("SA1")+cForn+cLoj,"A1_LOJA")
+			oGetPart:aCOLS[n,nP_Nom] := Posicione("SA1",1,xFilial("SA1")+cForn+cLoj,"A1_NOME")
+			If SA1->(Eof())
+				Help("",1,"GCP02CLIC")
+				lRet := .F. 
+			Endif
+			If SA1->A1_MSBLQL == "1"
+				Help("",1,"GCP02CLIB")
+				lRet := .F. 
+			EndIf
+		Endif
+	Else
+		If cForCli == "F"
+			Posicione("SA2",1,xFilial("SA2")+cForn,"A2_COD")
+			If SA2->(Eof())
+				Help("",1,"GCP02FORC")
+				lRet := .F. 
+			Endif
+		Else
+			Posicione("SA1",1,xFilial("SA1")+cForn,"A1_COD")
+			If SA1->(Eof())
+					Help("",1,"GCP02CLIC")
+				lRet := .F. 
+			Endif
+		Endif
+	EndIf
+ElseIf cTipo == "1"
+	oGetPart:aCOLS[n,nP_Loj] := Posicione("CO6",1,xFilial("CO6")+cForn+cLoj,"CO6_LOJFOR")
+	oGetPart:aCOLS[n,nP_Nom] := Posicione("CO6",1,xFilial("CO6")+cForn+cLoj,"CO6_NOME")
+	oGetPart:aCOLS[n,nP_For] := Posicione("CO6",1,xFilial("CO6")+cForn+cLoj,"CO6_CODIGO")
+	If CO6->(Eof())
+		Help("",1,"GCP02PART")
+		lRet := .F. 
+	ElseIf SA2->(dbSeek(xFilial("SA2")+CO6->(CO6_FORNEC+CO6_LOJFOR)))
+
+		Iif(FindFunction("APMsgAlert"), APMsgAlert(STR0104,), MsgAlert(STR0104,))
+		lRet := .F. 
+	EndIf
+Endif
+
+For i:=1 To nT_aCOLS
+	If i <> nItem
+		If oGetPart:aCOLS[i,nP_Tip] == cTipo .And.   oGetPart:aCOLS[i,nP_For] == cForn .And.  oGetPart:aCOLS[i,nP_Loj] == cLoj .And.  !oGetPart:aCOLS[i,len(aCols[i])]
+			Help("",1,"GCP02FDUP")
+			lRet := .F. 
+		Endif
+	Endif
+next
+
+If	lRet .And.  !lPrjCni
+	oGetPart:aCOLS[n,nP_Lote]:=cLote
+EndIf
+
+Return(lRet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function CriaHeader(cCampos,cExcessao,aHeader,cAlias)
+Local   lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local 	aArea		:= GetArea()
+Local   lGCP2FHEA   := iif ( lPrjCni, Existblock( "GCP2FHEA"), .F. )
+Local   lRetTst := .F. , lRetProibe := .F. 
+aHeader := If( aHeader == nil, {}, aHeader ) ;
+cCampos := If( cCampos == nil, "", cCampos ) ;
+cExcessao := If( cExcessao == nil, "", cExcessao ) ;
+
+SX3->(dbSetOrder(1))
+SX3->(dbSeek(cAlias))
+While SX3->(!EOF()) .And.   SX3->X3_ARQUIVO == cAlias
+	If (X3USO(SX3->X3_USADO) .Or.  ( AllTrim(SX3->X3_CAMPO) $ Alltrim(cCampos) )) .AND.  (cNivel >= SX3->X3_NIVEL) .AND.  !(AllTrim(SX3->X3_CAMPO) $ Alltrim(cExcessao))
+
+		if lPrjCni
+			if lGCP2FHEA
+				lRetTst :=	Execblock( "GCP2FHEA", .F. , .F. , {cAlias, AllTrim(SX3->X3_CAMPO)} )
+				if ValType(lRetTst) == "L"
+					lRetProibe := lRetTst
+				EndIf
+		    EndIf
+
+			if !lRetProibe
+
+
+
+
+
+
+
+
+
+
+
+				aAdd( aHeader, { AlLTrim( X3Titulo() ),				SX3->X3_CAMPO	,				SX3->X3_Picture	,				SX3->X3_TAMANHO	,				SX3->X3_DECIMAL	,				SX3->X3_Valid  	,				SX3->X3_USADO  	,				SX3->X3_TIPO   	,				SX3->X3_F3		   ,				SX3->X3_CONTEXT   ,				SX3->X3_CBOX	  ,				SX3->X3_RELACAO    } )
+			EndIf
+		Else
+
+
+
+
+
+
+
+
+
+
+
+			aAdd( aHeader, { AlLTrim( X3Titulo() ),			SX3->X3_CAMPO	,			SX3->X3_Picture	,			SX3->X3_TAMANHO	,			SX3->X3_DECIMAL	,			SX3->X3_Valid  	,			SX3->X3_USADO  	,			SX3->X3_TIPO   	,			SX3->X3_F3		   ,			SX3->X3_CONTEXT   ,			SX3->X3_CBOX	  ,			SX3->X3_RELACAO    } )
+		EndIf
+	Endif
+	SX3->(dbSkip())
+End
+
+If cAlias # "COC"
+	ADHeadRec(cAlias,aHeader)
+EndIf
+
+RestArea(aArea)
+Return(aHeader)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function CriaAcols(aHeader,cAlias,nIndice,cComp,nOpc,aCols,cCPO_ITEM,cINDICE, lRecno)
+Local nX		   		:= 0
+Local nCols		     	 := 0
+Local aArea				:= GetArea()
+
+aCols := If( aCols == nil, {}, aCols ) ;
+cCPO_ITEM := If( cCPO_ITEM == nil, "", cCPO_ITEM ) ;
+lRecno := If( lRecno == nil, .T. , lRecno ) ;
+
+If !lRecno
+	aSize(aHeader, Len(aHeader))
+EndIf
+
+IF nOpc == 3
+	aAdd(aCols,Array(Len(aHeader)+1))
+	For nX := 1 To Len(aHeader)
+		If IsHeadRec(aHeader[nX,2])
+			aCols[Len(aCols),nX] := 0
+		ElseIf IsHeadAlias(aHeader[nX,2])
+			aCols[Len(aCols),nX] := cAlias
+		ElseIf Alltrim(aHeader[nX][2]) == cCPO_ITEM
+			aCols[1][nX] := STRZERO(1,TamSX3(cCPO_ITEM)[1])
+		Else
+			aCols[1][nX] := CriaVar(AllTrim(aHeader[nX][2]))
+		EndIF
+	next
+	aCols[1][Len(aHeader)+1] := .F. 
+Else
+	(cAlias)->(dbSetOrder(nIndice))
+	(cAlias)->(dbSeek(cComp))
+	While (cAlias)->(!Eof()) .And.  ALLTRIM((cAlias)->(&(cINDICE))) == ALLTRIM(cComp)
+		aAdd(aCols,Array(Len(aHeader)+1))
+		nCols ++
+		For nX := 1 To Len(aHeader)
+			If IsHeadRec(aHeader[nX,2])
+				aCols[Len(aCols),nX] := (cAlias)->(Recno())
+			ElseIf IsHeadAlias(aHeader[nX,2])
+				aCols[Len(aCols),nX] := cAlias
+			ElseIf ( aHeader[nX][10] <> "V")
+				aCols[nCols][nX] := (cAlias)->(FieldGet(FieldPos(aHeader[nX][2])))
+			Else
+				If AllTrim(aHeader[nX,2])=="CO2_DESCR"
+					aCols[nCols,nX] := CO2->(GcpValDesc(CO2->CO2_CODPRO))
+	    	    Else
+					aCols[nCols][nX] := CriaVar(aHeader[nX][2], .T. )
+	    	    EndIf
+			Endif
+		next
+		aCols[nCols][Len(aHeader)+1] := .F. 
+		(cAlias)->(dbSkip())
+	End
+EndIf
+RestArea(aArea)
+Return(aCols)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function TcFieldAll(qQuery)
+Local aStruQry 	:= {}
+Local nI		:= 0
+Local aArea		:= GetArea()
+Local AAreaSX3	:= SX3->(GetArea())
+
+SX3->(dbSetOrder(2))
+aStruQry   := (qQuery)->(dbStruct())
+For nI := 1 To Len(aStruQry)
+	If SX3->(dbSeek(aStruQry[nI][1]))
+		aStruQry[nI][2] := SX3->X3_TIPO
+		If aStruQry[nI][2] <> "C"
+			TcSetField(qQuery ,aStruQry[nI][1],aStruQry[nI][2],aStruQry[nI][3],aStruQry[nI][4])
+		EndIf
+	EndIf
+next
+RestArea(AAreaSX3)
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function MenuDef()
+Local aRotina := {}
+Local aRotAux	:= {}
+Local lGCP02Rot	:= Existblock( "GCP02Rot" )
+
+aAdd(aRotina,{"Pesquisar" 		,"AxPesqui"  ,0,1})
+aAdd(aRotina,{"Consultar"    	,"GCPA02Man" ,0,2})
+aAdd(aRotina,{"Incluir"     	,"GCPA02Man" ,0,3})
+aAdd(aRotina,{If( cPaisLoc $ "ANG|PTG", "Manutenção", "Manutencao" )    	,"GCPA02Man" ,0,4})
+aAdd(aRotina,{"Gerar Edital"  		,"GCPA02Scm" ,3,3})
+aAdd(aRotina,{"Andamento"	  	,"GCPA005" 	 ,0,5})
+aAdd(aRotina,{"Cancelar"     	,"GCPA02Can" ,0,4})
+aAdd(aRotina,{If( cPaisLoc $ "ANG|PTG", "Histórico", "Historico" )    	,"GCPA007" 	 ,0,4})
+aAdd(aRotina,{"Documentos"    	,"MsDocument",0,4})
+aAdd(aRotina,{"Legenda"      	,"GCPA02Leg" ,0,1})
+aAdd(aRotina,{STR0064      	,"GCPA02LegV",0,8})
+aAdd(aRotina,{STR0065     	,"GCPA05SRP" ,0,6})
+aAdd(aRotina,{"Remanescente"     	,"GCPA005"	 ,0,6})
+aAdd(aRotina,{"Encerrar"     	,"GCPA02Enc" ,0,7})
+aAdd(aRotina,{STR0138     	,"GCPA02Rev" ,0,4})
+
+
+
+
+
+If lGCP02Rot
+	aRotAux := Execblock( "GCP02Rot", .F. , .F.  )
+	If ValType( aRotAux ) == "A"
+		aEval( aRotAux, {|x| aAdd( aRotina, x ) } )
+	EndIf
+EndIf
+
+Return( aRotina )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Leg()
+
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local aLeg	  := {}
+
+aAdd(aLeg,{"BR_VERDE"     ,STR0105 })
+aAdd(aLeg,{"BR_VERMELHO"  ,STR0106 })
+aAdd(aLeg,{"BR_AMARELO"   ,STR0107 })
+aAdd(aLeg,{"BR_AZUL"      ,STR0108 })
+aAdd(aLeg,{"BR_BRANCO"    ,STR0109 })
+aAdd(aLeg,{"BR_CINZA"     ,STR0110 })
+aAdd(aLeg,{"BR_PINK"      ,STR0111 })
+aAdd(aLeg,{"BR_LARANJA"   ,STR0112 })
+aAdd(aLeg,{"BR_MARRON"    ,STR0113 })
+aAdd(aLeg,{"BR_PRETO"     ,STR0114 })
+aAdd(aLeg,{"LIGHTBLU"     ,STR0115 })
+aAdd(aLeg,{"BRANCO"       ,STR0116 })
+aAdd(aLeg,{"AVGOIC1"      ,STR0117 })
+aAdd(aLeg,{"BR_MARROM"    ,STR0118 })
+aAdd(aLeg,{"PMSEDT2"      ,STR0119 })
+aAdd(aLeg,{"BR_VIOLETA"   ,STR0120 })
+
+If !lPrjCni
+	aAdd(aLeg,{"PMSEDT4"   ,STR0121 })
+EndIf
+
+BrwLegenda(cCadastro,"Status",aLeg)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Status()
+
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local aStatus := {}
+
+
+		aAdd(aStatus,{"CO1_ETAPA == 'PB'" ,"BR_VERDE"     })
+		aAdd(aStatus,{"CO1_ETAPA == 'PE'" ,"BR_VERMELHO"  })
+		aAdd(aStatus,{"CO1_ETAPA == 'ED'" ,"BR_AMARELO"   })
+		aAdd(aStatus,{"CO1_ETAPA == 'PC'" ,"BR_AZUL"      })
+		aAdd(aStatus,{"CO1_ETAPA == 'PM'" ,"BR_AZUL"      })
+		aAdd(aStatus,{"CO1_ETAPA == 'HO'" ,"BR_BRANCO"    })
+		aAdd(aStatus,{"CO1_ETAPA == 'TP'" ,"BR_CINZA"     })
+		aAdd(aStatus,{"CO1_ETAPA == 'AD'" ,"BR_PINK"      })
+		aAdd(aStatus,{"CO1_ETAPA == 'AC'" ,"BR_LARANJA"   })
+		aAdd(aStatus,{"CO1_ETAPA == 'FV'" ,"BR_MARRON"    })
+		aAdd(aStatus,{"CO1_ETAPA == 'PX'" ,"BR_PRETO"     })
+		aAdd(aStatus,{"CO1_ETAPA == 'CO'" ,"LIGHTBLU"     })
+		aAdd(aStatus,{"CO1_ETAPA == 'AS'" ,"BRANCO"  	  	})
+		aAdd(aStatus,{"CO1_ETAPA == 'JR'" ,"AVGOIC1"			})
+		aAdd(aStatus,{"CO1_ETAPA $ 'GP/EC/EO'" ,"BR_MARROM"    })
+		aAdd(aStatus,{"CO1_ETAPA == 'PR'" ,"PMSEDT2"    })
+ 		aAdd(aStatus,{"CO1_ETAPA == 'SR'" ,"PMSEDT4"    })
+
+CO1->(dbSetOrder(1))
+While CO1->(!EOF())
+	If !lPrjCni .And.  (CO1->CO1_SRP == "S" .Or.  CO1->CO1_SRP == "1") .And.  !Empty(CO1->CO1_DTSRP)
+		nQtdSRP:= IIf ( !Empty(CO1_DTSRPA) , CO1_DTSRPA, CO1->CO1_DTSRP) + CO1_QTDSRP
+
+
+		If dDataBase > nQtdSRP
+			RecLock("CO1", .F. )
+				CO1->CO1_BKPASS	:= CO1->CO1_PASSO
+				CO1->CO1_BKETAP	:= CO1->CO1_ETAPA
+		   		CO1->CO1_ETAPA	:= "AP"
+				aAdd(aStatus,{"DTOS(CO1_DTSRP) <= DTOS(DDATABASE)","BR_VIOLETA"  })
+			MsUnlock()
+		ElseIf !(CO1->CO1_ETAPA $ ("PC*CO"))
+			RecLock("CO1", .F. )
+			CO1->CO1_ETAPA := CO1->CO1_BKETAP
+	    EndIf
+	EndIf
+CO1->(dbSkip())
+EndDo
+
+Return aStatus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02VldMod()
+Local lRet   		:= .T. 
+Local aValTipo	:= Iif(M->CO1_REGRA == "002",aModXTipo2,aModXTipo)
+Local nPos	 	:= 0
+
+If M->CO1_REGRA = "002" .And.  M->CO1_MODALI == "TP"
+	Aviso(STR0057,STR0134,{"OK"},1)
+	lRet := .F. 
+EndIf
+
+If lRet .And.  !Empty(M->CO1_MODALI) .And.  (lRet := ExistCpo("SX5","LF"+M->CO1_MODALI))
+	If (nPos := aScan(aValTipo,{|x| x[1] == M->CO1_MODALI})) > 0 .And.  !(M->CO1_TIPO $ aValTipo[nPos,2])
+		M->CO1_TIPO   := CriaVar("CO1_TIPO", .F. )
+		M->CO1_DESTIP := CriaVar("CO1_DESTIP", .F. )
+	EndIf
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AjustaSX3()
+
+dbSelectArea("SX3")
+dbSetOrder(2)
+If dbSeek("CO1_MODALI") .And.  Upper(AllTrim(SX3->X3_VALID)) # "GCP02VLDMOD()"
+	Reclock("SX3", .F. )
+	X3_VALID := "GCP02VldMod()"
+	MsUnlock()
+Endif
+
+If dbSeek("CO1_TIPO")
+	If AllTrim(SX3->X3_F3) # "LG"
+		Reclock("SX3", .F. )
+		X3_F3 := "LG"
+		MsUnlock()
+	EndIf
+	If AllTrim(Upper(SX3->X3_VALID)) # "GCP02VLDTP()"
+		Reclock("SX3", .F. )
+		X3_VALID := "GCP02VldTp()"
+		MsUnlock()
+	EndIf
+Endif
+
+If dbSeek("CO8_TIPO") .And.  AllTrim(SX3->X3_F3) # "LG"
+	Reclock("SX3", .F. )
+	X3_F3 := "LG"
+	MsUnlock()
+Endif
+
+If dbSeek("CO1_DIRET") .And.  AllTrim(X3_F3) # "LJ"
+	Reclock("SX3", .F. )
+	X3_F3 := "LJ"
+	MsUnlock()
+Endif
+
+If dbSeek ("CO2_DESCR") .And.  SX3->X3_ORDEM <> "08"
+	Reclock("SX3", .F. )
+	X3_ORDEM := "08"
+	MsUnlock()
+EndIf
+
+If dbSeek("CO3_LOJA") .And.  SX3->X3_VISUAL <> "A"
+	Reclock("SX3", .F. )
+	X3_VISUAL := "A"
+	MsUnlock()
+Endif
+
+If dbSeek("CO3_LOJA") .And.  !Empty(SX3->X3_TRIGGER)
+	Reclock("SX3", .F. )
+	X3_TRIGGER := ""
+	MsUnlock()
+Endif
+
+If dbSeek("CO3_NOME") .And.  !Empty(SX3->X3_RELACAO)
+	Reclock("SX3", .F. )
+	X3_RELACAO := " "
+	MsUnlock()
+Endif
+
+If dbSeek("CO1_DSCRGR") .And.  Empty(SX3->X3_RELACAO)
+	Reclock("SX3", .F. )
+	X3_RELACAO := 'IIF(INCLUI, POSICIONE("CO0",1,XFILIAL("CO0")+"001","CO0_DSCRGR"),POSICIONE("CO0",1,XFILIAL("CO0")+CO1->CO1_REGRA,"CO0_DSCRGR"))'
+	MsUnlock()
+Endif
+
+aHelpPor :=	{"Arquivo EMAILCOMIS.HTM não está"," no diretorio configurado  no parametro MV_GCPDOT"}
+aHelpEsp := {"El archivo EMAILCOMIS.HTM no esta"," en el directorio configurado  en el parametro MV_GCPDOT"}
+aHelpEng := {"EMAILCOMIS.HTM file is not in the"," directory configured in the parameter MV_GCPDOT"}
+PutHelp("PGCP02ARQMAIL",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"Nao sera permitido linha sem email."}
+aHelpEng := {   "Line without e-mail is not allowed."}
+aHelpEsp := {   "No se permitira linea sin email."}
+PutHelp("PGCP02NOMAIL",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"É necessário pelo menos ","um produto no edital"}
+aHelpEng := {   "É necessário pelo menos ","um produto no edital"}
+aHelpEsp := {   "É necessário pelo menos ","um produto no edital"}
+PutHelp("PGCP02NOITEM",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+aHelpEng := { 	"Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+aHelpEsp := {   "Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+PutHelp("PA120EDITAL",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+aHelpEng := { 	"Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+aHelpEsp := {   "Pedido não pode ser ","excluido, pois foi gerado por Edital"}
+PutHelp("PMA410EDITAL",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+
+aHelpPor :=	{	"Todos os campos são obrigatorios "," para geração do Contrato"}
+aHelpEng := { 	"Todos os campos são obrigatorios "," para geração do Contrato"}
+aHelpEsp := {   "Todos os campos são obrigatorios "," para geração do Contrato"}
+PutHelp("PGCPOBRCNT",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"O tipo de contrato deve ser de venda"}
+aHelpEng := {   "O tipo de contrato deve ser de venda"}
+aHelpEsp := {   "O tipo de contrato deve ser de venda"}
+PutHelp("PGCPCNTVEN",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{	"O tipo de contrato deve ser de compra"}
+aHelpEng := { 	"O tipo de contrato deve ser de compra"}
+aHelpEsp := {   "O tipo de contrato deve ser de compra"}
+PutHelp("PGCPCNTCOM",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+aHelpPor :=	{ "Contrato não pode ser excluido"," pois foi gerado por edital"}
+aHelpEng := { "Contrato não pode ser excluido"," pois foi gerado por edital"}
+aHelpEsp := { "Contrato não pode ser excluido"," pois foi gerado por edital"}
+PutHelp("PCNT100EDITAL",aHelpPor,aHelpEng,aHelpEsp, .T. )
+
+
+If	AliasIndic("CO0")
+	CO0->(DbGoTop())
+	If	CO0->(Eof())
+		GCP017Carga()
+	EndIf
+EndIf
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AjustaSX1( lX1, cPerg )
+
+Local aArea		:= GetArea()
+Local aHelpP	:= {}
+Local aHelpE	:= {}
+Local aHelpS	:= {}
+Local cModal    := CriaVar("CO1_MODALI", .F. )
+Local cTipo     := CriaVar("CO1_TIPO", .F. )
+
+lX1 := If( lX1 == nil, .T. , lX1 ) ;
+
+IF lRemanescente
+	cModal    := ALLTRIM(CO1->CO1_MODALI)
+	cTipo     := ALLTRIM(CO1->CO1_TIPO)
+ENDIF
+
+dbSelectArea("SX1")
+dbSetOrder(1)
+If dbSeek(Padr("GCA002",10)+"02") .And.  "NAOVAZIO() .AND. " $ Upper(SX1->X1_VALID)
+	Reclock("SX1", .F. )
+	X1_VALID := "ExistChav('CO1',mv_par01+mv_par02)"
+	MsUnlock()
+Endif
+
+If lX1
+
+
+
+
+	If !MsSeek(Padr("GCPA02",len(sx1->x1_grupo))+"01")
+		PutSX1( cPerg, "01", "Modalidade ?", "Modalidade ?", "Modalidade ?", "mv_ch1", "C", 2, 0, 0, "G", 'EXISTCPO("SX5","LF"+mv_par01)', "LF", "", "S", "mv_par01", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", aHelpP, aHelpE, aHelpS )
+	    If MsSeek(Padr("GCPA02",len(sx1->x1_grupo))+"01")
+	    	RecLock("SX1", .F. )
+				X1_PICTURE	:= "@!"
+			MsUnLock()
+		Endif
+	Else
+		RecLock("SX1", .F. )
+		    X1_PERGUNT	:= "Modalidade ?"
+		    X1_PERSPA	:= "Modalidade ?"
+		    X1_PERENG	:= "Modalidade ?"
+		    X1_VALID	:= 'EXISTCPO("SX5","LF"+mv_par01)'
+		    X1_VAR01	:= "mv_par01"
+			X1_CNT01 	:= ""
+			X1_PICTURE	:= "@!"
+		MsUnLock()
+	EndIf
+
+	If !MsSeek(Padr("GCPA02",len(sx1->x1_grupo))+"02")
+		PutSX1( cPerg, "02", "Tipo de modalidade ?", "Tipo de modalidade ?", "Tipo de modalidade ?", "mv_ch2", "C", 2, 0, 0, "G", "GCP02VldTp", "LG", "", "S", "mv_par02", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", aHelpP, aHelpE, aHelpS )
+        If MsSeek(Padr("GCPA02",len(sx1->x1_grupo))+"02")
+        	RecLock("SX1", .F. )
+				X1_PICTURE := "@!"
+			MsUnLock()
+		EndIf
+	Else
+		RecLock("SX1", .F. )
+			X1_CNT01 := ""
+		MsUnlock()
+	EndIf
+
+	If !MsSeek(Padr("GCPA02",len(SX1->X1_GRUPO))+"03")
+		PutSX1(cPerg,"03", "Regra", "Regla", "Rule", "mv_ch3", "C", 3, 0, 0, "G", 'ExistCpo("CO0", mv_par03)', "CO0", "", "S", "mv_par03", "", "", "", "001", "", "", "", "", "", "", "", "", "", "", "", "", aHelpP, aHelpE, aHelpS)
+	Else
+		RecLock("SX1", .F. )
+			X1_VALID 	:= 'ExistCpo("CO0", mv_par03)'
+			X1_VARIAVL	:= "mv_ch3"
+		MsUnlock()
+	EndIf
+
+Else
+	SX3->( dbSetOrder(2) )
+	If SX3->( dbSeek( "CO1_DTABER" ) )
+		If Alltrim( X3Titulo() ) <> "Dt. Recebim."
+			RecLock( "SX3", .F.  )
+				_FIELD->X3_TITULO := "Dt. Recebim."
+				_FIELD->X3_TITSPA := "Dt. Recebim."
+				_FIELD->X3_TITENG := "Dt. Recebim."
+				_FIELD->X3_DESCRIC := "Data do Recebimento"
+				_FIELD->X3_DESCSPA := "Data do Recebimento"
+				_FIELD->X3_DESCENG := "Data do Recebimento"
+			SX3->( MsUnLock() )
+		EndIf
+	EndIf
+
+	If SX3->( dbSeek( "CO1_HRABER" ) )
+		If Alltrim( X3Titulo() ) <> "Hr. Recebim."
+			RecLock( "SX3", .F.  )
+				_FIELD->X3_TITULO := "Hr. Recebim."
+				_FIELD->X3_TITSPA := "Hr. Recebim."
+				_FIELD->X3_TITENG := "Hr. Recebim."
+				_FIELD->X3_DESCRIC := "Hora do Recebimento"
+				_FIELD->X3_DESCSPA := "Hora do Recebimento"
+				_FIELD->X3_DESCENG := "Hora do Recebimento"
+			SX3->( MsUnLock() )
+		EndIf
+	EndIf
+
+	If SX3->( dbSeek( "CO1_MODALI" ) )
+		If Alltrim( SX3->X3_WHEN ) <> ".F."
+			RecLock( "SX3", .F.  )
+				_FIELD->X3_WHEN := ".F."
+			SX3->( MsUnLock() )
+		EndIf
+	EndIf
+EndIf
+
+RestArea( aArea )
+
+Return( Nil )
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCAMarkAll( aData )
+
+aEval( aData, { |x| If( Empty( aData ), Nil, x[1] := !x[1] ) }, oLbx:Refresh() )
+
+oLbx:bLine := GCAbLine( aData )
+oLbx:Refresh()
+
+Return( .T.  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCAFilter( aData, aHeadC1, aRetFil, cAliasTmp )
+Local nX		:= 0
+Local nY		:= 0
+Local aAuxData	:= {}
+Local aVetor := {}
+
+aData := {}
+dbSelectArea(cAliasTmp)
+dbGoTop()
+If (cAliasTmp)->(!Eof())
+	TcFieldAll(cAliasTmp)
+	While (cAliasTmp)->(!Eof())
+		aVetor:= {}
+		aAdd( aVetor, .F.  )
+		For nY:= 1 To Len(aHeadC1)-2
+			If !Empty((cAliasTmp)->(FieldGet(FieldPos(aHeadC1[nY,2]))))
+				aAdd(aVetor,(cAliasTmp)->(FieldGet(FieldPos(aHeadC1[nY,2]))))
+			Else
+				aAdd(aVetor,CriaVar(aHeadC1[nY,2]))
+			EndIf
+		next
+		aAdd( aData , aVetor )
+		(cAliasTmp)->(dbSkip())
+	End
+EndIf
+
+aEval( aData, { |y| nX++, If( aRetFil[1] <= aData[nX][ aScan( aHeadC1, { |z| Trim( z[2] ) == "C1_NUM" } ) + 1] .And.  aRetFil[2] >= aData[nX][ aScan( aHeadC1, { |z| Trim( z[2] ) == "C1_NUM" } ) + 1], aAdd( aAuxData, y ), Nil ) }, oLbx:Refresh() )
+
+aData := aClone( aAuxData )
+
+oLbx:SetArray( aData )
+oLbx:bLine := GCAbLine( aData )
+oLbx:Refresh()
+
+Return( .T.  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCAbLine( aData )
+Local bMyLine
+Local cLine		:= ""
+
+cLine := "{ Iif( aData[oLbx:nAt,1], oOk, oNo )"
+aEval( aTitulo, { |x,y| cLine += ",aData[oLbx:nAt," + LTrim( Str(y) ) + "]" }, 2 ) ; cLine += "}"
+
+bMyLine := & ( "{|| " + cLine + "}" )
+
+Return( bMyLine )
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Enc()
+
+Local aGrvCO1  := {}
+Local aGrvCO7  := {}
+Local cCO7Acao := ""
+
+dbSelectArea("CO1")
+
+
+If CO1->CO1_ETAPA $ "PE,CE"
+	Help("",1,"GCP02NOENC")
+	Return
+Endif
+
+If Iif(FindFunction("APMsgYesNo"), APMsgYesNo("Confirma o encerramento deste edital?", cCadastro), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.("Confirma o encerramento deste edital?", cCadastro)))
+
+	cCO7Acao := "Passo: " + CO1->CO1_PASSO + chr(13)+chr(10)
+	cCO7Acao += If( cPaisLoc $ "ANG|PTG", "Encerramento do edital", "Encerramento do Edital" ) + chr(13)+chr(10)
+
+	aGrvCO1 := {	{"CO1_ETAPA" , "PE"      }}
+
+
+
+
+
+
+
+
+
+	aGrvCO7 := {	{"CO7_CODEDT", CO1->CO1_CODEDT}, {"CO7_NUMPRO", CO1->CO1_NUMPRO}, {"CO7_DTMOV" , dDataBase}, {"CO7_HRMOV" , Time()}, {"CO7_CODUSU", Upper(Alltrim(Substr(cUsuario,7,15)))}, {"CO7_MOVATU", CO1->CO1_ETAPA}, {"CO7_DESATU", Posicione("SX5",1,xFilial("SX5")+"LE"+CO1->CO1_ETAPA,"X5_DESCRI")}, {"CO7_ACAO"  , cCO7Acao }, {"CO7_PASATU", CO1->CO1_PASSO}}
+	GCPA006(aGrvCO7, aGrvCO1)
+
+Else
+	Iif(FindFunction("APMsgInfo"), APMsgInfo(If(cPaisLoc$"ANG|PTG","Edital não encerrado","Edital nao encerrado"),), MsgInfo(If(cPaisLoc$"ANG|PTG","Edital não encerrado","Edital nao encerrado"),))
+Endif
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function LimpRes(cTipo,aDados)
+Local aArea   := GetArea()
+Local aAreaSM0 := SM0->(GetArea())
+Local aRet     := {}
+Local aAux     := {}
+Local lRet     := .T. 
+Local cNumPro  := CO1->CO1_NUMPRO
+Local cQuery   := ""
+Local cFilSC1  := ""
+Local cSitAnt  := " "
+Local cFilBkp  := cFilAnt
+Local lCancelCN9:= .F. 
+Local lCancelSC7:= .F. 
+
+If Empty(Alltrim(cTipo)) .Or.  !(Alltrim(UPPER(cTipo)) $ "PC_FV_CO")
+	Help( "", 1, If( cPaisLoc $ "ANG|PTG", "Tipo de operação inválido! - LIMPRES()", "Tipo de operação inválido ! - LIMPRES()" ))
+	aAdd(aRet,{ .F. ,""})
+	lRet := .F. 
+EndIf
+
+If lRet
+	Do Case
+
+	Case cTipo == "P"
+
+		cQuery := "SELECT R_E_C_N_O_ SC7RECNO "
+		cQuery += "FROM " +RetSqlName("SC7") +" WHERE "
+		cQuery += "	D_E_L_E_T_ <> '*' AND "
+		If SC7->(FieldPos("C7_FISCORI")) == 0
+			cQuery += "	C7_FILIAL = '" +xFilial("SC7") +"' AND "
+		Else
+			cQuery += "	CASE C7_FISCORI WHEN '" +Space(FWSizeFilial()) +"' THEN C7_FILIAL "
+			cQuery += " ELSE C7_FISCORI END = '" +xFilial("SC7") +"' AND "
+		EndIf
+		cQuery += "	C7_CODED = '" +CO1->CO1_CODEDT +"' AND "
+		cQuery += "	C7_NUMPR = '" +CO1->CO1_NUMPRO +"' AND "
+		cQuery += "	C7_QUANT - C7_QUJE > 0 AND "
+		cQuery += "	C7_RESREM <> 'S'"
+		cQuery := ChangeQuery(cQuery)
+		dbUseArea( .T. ,"TOPCONN",TcGenQry(,,cQuery),"SC7TMP")
+
+		Begin Sequence; BeginTran()
+
+		While lRet .And.  SC7TMP->(!EOF())
+			dbSelectArea("SC7")
+			dbGoTo(SC7TMP->SC7RECNO)
+
+			lCancelSC7:= .F. 
+			If	!Empty(aDados) .And.  Ascan(aDados,{|x| x[6] + x[7] + x[3] == SC7->C7_CODED + SC7->C7_NUMPR + SC7->C7_PRODUTO }) > 0
+				lCancelSC7:= .T. 
+			EndIf
+
+			If	lCancelSC7
+				If AllTrim(SC7->C7_RESIDUO) <> "S"
+					lRet := MA235ElRes()
+					SC7->(dbGoTo(SC7TMP->SC7RECNO))
+				EndIf
+
+				If !lRet
+					Help("",1,"LIMPRES",,"Erro ao eliminar o resíduo do pedido de compra : " +SC7->C7_NUM +"/" +SC7->C7_ITEM,1,1)
+					aAdd(aRet,{ .F. ,""})
+					DisarmTransaction()
+					lRet := .F. 
+				Else
+					RecLock("SC7", .F. )
+					SC7->C7_RESREM := "S"
+					SC7->(MsUnLock())
+					aAdd(aRet,{lRet,SC7->C7_PRODUTO,SC7->(C7_QUANT - C7_QUJE),SC7->(C7_NUMSC-C7_ITEMSC)})
+				EndIf
+			EndIf
+
+			SC7TMP->(dbSkip())
+		End
+
+		EndTran(); end
+
+		SC7TMP->(dbCloseArea())
+
+	Case cTipo == "F"
+
+		cQuery := "SELECT SC6.R_E_C_N_O_ SC6RECNO "
+		cQuery += "FROM " +RetSqlName("SC6") +" SC6 "
+		cQuery += "JOIN " +RetSqlName("SC5") +" SC5 ON SC5.D_E_L_E_T_ <> '*' AND "
+		cQuery += "	SC5.C5_FILIAL = '" + xFilial("SC5") + "' AND "
+		cQuery += "	SC5.C5_NUM = SC6.C6_NUM AND "
+		cQuery += "	SC5.C5_CODED = '" +CO1->CO1_CODEDT +"' AND "
+		cQuery += "	SC5.C5_NUMPR = '" +CO1->CO1_NUMPRO +"' AND "
+		cQuery += "	SC5.C5_RESREM <> 'S' "
+		cQuery += "WHERE SC6.D_E_L_E_T_ <> '*' AND SC6.C6_FILIAL = '" + xFilial("SC6") + "' AND"
+		cQuery += "	SC6.C6_QTDVEN - SC6.C6_QTDENT > 0"
+		cQuery := ChangeQuery(cQuery)
+		dbUseArea( .T. ,"TOPCONN",TcGenQry(,,cQuery),"SC6TMP")
+
+		Begin Sequence; BeginTran()
+
+		While lRet .And.  SC6TMP->(!EOF())
+			dbSelectArea("SC6")
+			dbGoTo(SC6TMP->SC6RECNO)
+
+			If AllTrim(SC6->C6_BLQ) <> "R"
+				lRet := MAResDoFat()
+				SC6->(dbGoTo(SC6TMP->SC6RECNO))
+			EndIf
+
+			If !lRet
+				Help("",1,"LIMPRES",,"Erro ao eliminar o resíduo do pedido de venda : " +SC6->C6_NUM +"/" +SC6->C6_ITEM,1,1)
+				aAdd(aRet,{ .F. ,""})
+				DisarmTransaction()
+				lRet := .F. 
+			Else
+				aAdd(aRet,{lRet,SC6->C6_PRODUTO,SC6->(C6_QTDVEN - C6_QTDENT)})
+
+				SC5->(dbSetOrder(1))
+				SC5->(dbSeek(xFilial("SC5")+SC6->C6_NUM))
+				RecLock("SC5", .F. )
+				SC5->C5_RESREM := "S"
+				SC5->(MsUnLock())
+			EndIf
+
+			SC6TMP->(dbSkip())
+		End
+
+		EndTran(); end
+
+		SC6TMP->(DbCloseArea())
+
+	Case cTipo == "C"
+
+		cQuery := "SELECT CN9.R_E_C_N_O_ CN9RECNO, CNB.R_E_C_N_O_ CNBRECNO"
+		cQuery += "FROM " +RetSqlName("CN9") +" CN9 "
+		cQuery += "JOIN " +RetSqlName("CNB") +" CNB ON CNB.D_E_L_E_T_ <> '*' AND "
+		If CNB->(FieldPos("CNB_FILORI")) == 0
+			cQuery += "	CNB.CNB_FILIAL = '" +xFilial("CNB") +"' AND "
+		Else
+			cQuery += "	CNB.CNB_FILORI = '" +xFilial("CNB") +"' AND "
+		EndIf
+		cQuery += "	CNB.CNB_CONTRA = CN9.CN9_NUMERO AND "
+		cQuery += "	CNB.CNB_REVISA = CN9.CN9_REVATU AND "
+		cQuery += "	CNB.CNB_SLDREC > 0 "
+		cQuery += "WHERE CN9.D_E_L_E_T_ <> '*' AND "
+		If CN9->(FieldPos("CN9_FILORI")) == 0
+			cQuery += "	CN9.CN9_FILIAL = '" +xFilial("CN9") +"' AND "
+		Else
+			cQuery += "	CN9.CN9_FILORI = '" +xFilial("CN9") +"' AND "
+		EndIf
+		cQuery += "	CN9.CN9_NUMERO = CNB.CNB_CONTRA AND "
+		cQuery += " CN9.CN9_REVATU = CNB.CNB_REVISA AND "
+		cQuery += "	CN9.CN9_CODED = '" +CO1->CO1_CODEDT +"' AND "
+		cQuery += "	CN9.CN9_NUMPR = '" +CO1->CO1_NUMPRO +"' AND "
+		cQuery += "	CN9_RESREM <> 'S'"
+		cQuery := ChangeQuery(cQuery)
+		dbUseArea( .T. ,"TOPCONN",TcGenQry(,,cQuery),"CN9TMP")
+
+		Begin Sequence; BeginTran()
+
+		While lRet .And.  !CN9TMP->(EOF())
+
+			CNB->(dbGoTo(CN9TMP->CNBRECNO))
+
+			dbSelectArea("CN9")
+			dbGoTo(CN9TMP->CN9RECNO)
+			cSitAnt := CN9->CN9_SITUAC
+
+
+
+			lCancelCN9 := .F. 
+
+			If	!Empty(aDados) .And.  CNB->CNB_CONTRA+CNB->CNB_REVISA == CN9->CN9_NUMERO+CN9->CN9_REVATU .And.  Ascan(aDados,{|x| x[6] + x[7] + x[3] == CN9->CN9_CODED + CN9->CN9_NUMPR + CNB->CNB_PRODUT }) > 0
+				lCancelCN9 := .T. 
+			EndIf
+
+
+			If CN9->CN9_FILIAL # xFilial("CN9")
+				SM0->(dbSetOrder(1))
+				SM0->(dbSeek(cEmpAnt+AllTrim(CN9->CN9_FILIAL)))
+				cFilAnt := FWCodFil()
+			EndIf
+			If CN9->CN9_SITUAC == "09"
+				Help("",1,"LIMPRES",,STR0062+CN9->CN9_NUMERO +STR0093,1,1)
+				aAdd(aRet,{ .F. ,""})
+				lRet := .F. 
+			ElseIf CN9->CN9_SITUAC <> "01" .And.  lCancelCN9 .And.  !(lRet := CN100Cance(,,aRet))
+				Help("",1,"LIMPRES",,"Erro ao cancelar o contrato/revisão : " +AllTrim(CN9->CN9_NUMERO) +"/" +CN9->CN9_REVISA,1,1)
+				aAdd(aRet,{ .F. ,""})
+				lRet := .F. 
+			EndIf
+
+
+			If	lRet .And.  lCancelCN9 .And.  Empty(aScan(aAux,{|x| x == CN9TMP->CNBRECNO}))
+
+				CNB->(dbGoTo(CN9TMP->CNBRECNO))
+				aAdd(aRet,{lRet,CNB->CNB_PRODUT,CNB->CNB_SLDREC,CNB->(CNB_NUMSC+CNB_ITEMSC),CN9TMP->CNBRECNO,cSitAnt,CN9TMP->CN9RECNO})
+				aAdd(aAux,CN9TMP->CNBRECNO)
+			EndIf
+
+            SM0->(RestArea(aAreaSM0))
+			cFilAnt := cFilBkp
+			CN9TMP->(dbSkip())
+		End
+
+		If !lRet
+			DisarmTransaction()
+		EndIf
+
+		EndTran(); end
+
+		CN9TMP->(dbCloseArea())
+
+	EndCase
+Endif
+
+RestArea(aArea)
+Return aRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GC02LjPart()
+Local nPosTipo := 0
+Local lRet := .T. 
+
+If Type("oGetPart") == "O"
+	nPosTipo   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="CO3_TIPO"})
+
+	If nPosTipo > 0
+		lRet := oGetPart:aCols[oGetPart:nAt,nPosTipo] == "2"
+	EndIf
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function VlGRVCP02(nOpc, nOpcA, aPartic,aComiss,aSolic,oDlg)
+Local lGCP2VALD     := Existblock( "GCP2VALD")
+Local lGCP2TRAN     := Existblock( "GCP2TRAN")
+Local lRet := .T. 
+Local lOk    := .F. 
+Local lOkTmp := .F. 
+
+
+If lGCP2VALD
+    lOkTmp := Execblock( "GCP2VALD", .F. , .F. ,{nOpcA, nOpc})
+    If ValType(lOkTmp) == "L"
+    	lOk := lOkTmp
+    EndIf
+
+	Begin Sequence; BeginTran()
+
+		GCPA02Grv(nOpc,oGetEdt:aCols,aPartic,aComiss,aSolic)
+
+		If lOk .And.  lGCP2TRAN .And.  nOpcA == 1 .AND.  nOpc <> 2
+			lOkTmp := Execblock( "GCP2TRAN", .F. , .F. ,	{ M->CO1_CODEDT, M->CO1_NUMPRO, oGetEdt:aCols, oGetEdt:aHeader  })
+		    If ValType(lOkTmp) == "L"
+		    	lOk := lOkTmp
+		    EndIf
+			if !lOk
+				DisarmTransaction()
+				lRet := lOk
+			EndIf
+		EndIf
+
+	EndTran(); end
+Else
+	If nOpcA == 1 .AND.  nOpc <> 2
+		Begin Sequence; BeginTran()
+			GCPA02Grv(nOpc,oGetEdt:aCols,aPartic,aComiss,aSolic)
+	 	EndTran(); end
+	EndIf
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02VldTp()
+Local aArea   	:= GetArea()
+Local aValTipo	:= Iif(IsInCallStack("GCPA02Scm"),Iif(mv_par03 == "002",aModXTipo2,aModXTipo),Iif(M->CO1_REGRA == "002",aModXTipo2,aModXTipo))
+Local lRet    	:= .T. 
+local lSistemaS 	:= .F. 
+Local cModal  	:= If(IsInCallStack("GCPA02Scm"), mv_par01, M->CO1_MODALI)
+Local cTpMod  	:= If(IsInCallStack("GCPA02Scm"), mv_par02, M->CO1_TIPO)
+Local cDescMo 	:= If(IsInCallStack("GCPA02Scm"), " ", AllTrim(M->CO1_DESMOD))
+Local cTextoH 	:= ""
+Local nPosMod 	:= 0
+Local nX 	  		:= 0
+
+lRet := Empty(cTpMod) .Or.  ExistCpo("SX5","LG"+cTpMod)
+nPosMod := aScan(aValTipo,{|x| x[1] == cModal})
+
+If lRet .And.  nPosMod > 0 .And.  Empty(aValTipo[nPosMod,2]) .And.  !Empty(cTpMod)
+	Iif(FindFunction("APMsgInfo"), APMsgInfo(STR0061,), MsgInfo(STR0061,))
+	M->CO1_TIPO := CriaVar("CO1_TIPO")
+ElseIf lRet .And.  nPosMod > 0 .And.  !(cTpMod $ aValTipo[nPosMod,2])
+	cTextoH := STR0059 +cModal +" - " + cDescMo
+	cTextoH += STR0060
+	For nX := 1 To Len(aValTipo[nPosMod,2])
+		If !Empty(Substr(aValTipo[nPosMod,2],nX,2))
+			cTextoH += Chr(13)+Chr(10) +Substr(aValTipo[nPosMod,2],nX,2) +" - " +AllTrim(Tabela("LG",Substr(aValTipo[nPosMod,2],nX,2), .F. ))
+		EndIf
+		nX += 2
+	next
+	Aviso(STR0057,cTextoH,{"OK"},3)
+	lRet := .F. 
+EndIf
+
+RestArea(aArea)
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FUNCTION VALMOD()
+Local lRet    := .T. 
+Local cModal  := If(IsInCallStack("GCPA02Scm"), mv_par01, M->CO1_MODALI)
+Local cTpMod  := If(IsInCallStack("GCPA02Scm"), mv_par02, M->CO1_TIPO)
+Local nPosMod := 0
+Local aModal  := {}
+Local aArea   := GetArea()
+
+aAdd(aModal,{"DL","AA*DE*DR*DV"})
+aAdd(aModal,{"PG","PE*PP*MP"})
+aAdd(aModal,{"IN","DI"})
+aAdd(aModal,{"CV"," "})
+aAdd(aModal,{"CC"," "})
+aAdd(aModal,{"CS"," "})
+
+nPosMod := aScan(aModal,{|x| x[1] == cModal})
+
+If nPosMod > 0 .And.  aModal[nPosMod,1] $ "DL|PG|IN" .And.  !(cTpMod $ aModal[nPosMod,2])
+	Iif(FindFunction("APMsgInfo"), APMsgInfo(If(cPaisLoc$"ANG|PTG","Não existe registo relacionado a este tipo de modalidade","Não existe registro relacionado a este tipo de modalidade"),), MsgInfo(If(cPaisLoc$"ANG|PTG","Não existe registo relacionado a este tipo de modalidade","Não existe registro relacionado a este tipo de modalidade"),))
+	lRet := .F. 
+	Return( .F. )
+ElseIf nPosMod > 0 .And.  aModal[nPosMod,1] $ "CV|CC|CS" .And.  !Vazio(cTpMod)
+	Iif(FindFunction("APMsgInfo"), APMsgInfo(If(cPaisLoc$"ANG|PTG","Não existe registo relacionado a este tipo de modalidade","Não existe registro relacionado a este tipo de modalidade"),), MsgInfo(If(cPaisLoc$"ANG|PTG","Não existe registo relacionado a este tipo de modalidade","Não existe registro relacionado a este tipo de modalidade"),))
+	lRet := .F. 
+	Return( .F. )
+EndIf
+
+RestArea(aArea)
+RETURN lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function VldModTip()
+Local lRet  := .T. 
+
+DbSelectArea("CO1")
+ DbSetOrder(1)
+DBSEEK(xFilial("CO1")+M->(CO1_CODEDT+CO1_NUMPRO))
+If M->CO1_MODALI == "DL" .And.  Empty(M->CO1_TIPO)
+	lRet := .F. 
+	Help("",1,"GCP02TIPMOD")
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function SomaCO2(cAcao,cCodEdt,cNumPr,cCodPro)
+Local aAreaAnt	:= GetArea()
+Local nTotalCO2 := 0
+Local nX   		:= 0
+cAcao := If( cAcao == nil, "1", cAcao ) ;
+
+If	cAcao == "1"
+	For nX := 1 to Len(oGetEdt:aCols)
+
+		nTotalCO2 += GDFieldGet("CO2_VLESTI",nX,,oGetEdt:aHeader,oGetEdt:aCols) * GDFieldGet("CO2_QUANT",nX,,oGetEdt:aHeader,oGetEdt:aCols)
+	next
+
+ElseIf cAcao=="2"
+
+
+
+
+
+
+
+
+
+
+
+
+
+__execSql("SOMACO2"," SELECT SUM(CO2.CO2_QUANT) nQuant FROM  "+RetSqlName('CO2')+" CO2 WHERE CO2.CO2_FILIAL =  '" +xFilial('CO2')+"'  AND CO2.CO2_CODEDT =  "+___SQLGetValue(CCODEDT)+" AND CO2.CO2_NUMPRO =  "+___SQLGetValue(CNUMPR)+" AND CO2.CO2_CODPRO =  "+___SQLGetValue(CCODPRO)+" AND CO2.D_E_L_E_T_= ' '",{},.F.)
+
+	nTotalCO2 := SOMACO2->nQuant
+
+	SOMACO2->(DbCloseArea())
+
+EndIf
+RestArea(aAreaAnt)
+Return nTotalCO2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPA02LegV()
+
+CO0->(DbSetOrder(1))
+If	CO0->(DbSeek(xFilial("CO0")+CO1->CO1_REGRA))
+	FwExecView("Consultar","GCPA017",1)
+EndIf
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function ValDiaSRP()
+
+Local lRet := .T. 
+
+If (M->CO1_MODALI == "PG") .Or. (M->CO1_MODALI == "CC" .And.  M->CO1_TIPO $ "MP|TP")
+	If (M->CO1_SRP == "S" .Or.  M->CO1_SRP == "1") .And.  M->CO1_QTDSRP == 0
+		Iif(FindFunction("APMsgAlert"), APMsgAlert(STR0086,), MsgAlert(STR0086,))
+		lRet := .F. 
+	ElseIf (M->CO1_SRP == "S" .Or.  M->CO1_SRP == "1") .And.  M->CO1_QTDSRP > 365
+		Iif(FindFunction("APMsgAlert"), APMsgAlert(STR0087,), MsgAlert(STR0087,))
+		lRet := .F. 
+	ElseIf (M->CO1_SRP == "N" .Or.  M->CO1_SRP == "2") .And.  !Empty(M->CO1_QTDSRP)
+		Iif(FindFunction("APMsgAlert"), APMsgAlert(STR0088,), MsgAlert(STR0088,))
+		lRet := .F. 
+	EndIf
+ElseIf	(M->CO1_SRP == "S" .Or.  M->CO1_SRP == "1")
+	Iif(FindFunction("APMsgAlert"), APMsgAlert(STR0091,), MsgAlert(STR0091,))
+	lRet := .F. 
+EndIf
+
+Return(lRet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function GCP02ComCe(oLbx,cQuery,lWndManutEdit,aDados)
+Local aArea	  := GetArea()
+Local aHeadC1 := CriaHeader(Nil,Nil,Nil,"SC1")
+Local aVetTst := {}
+Local aVetor  := {}
+Local nY	  := 0
+
+If MaComCent()
+	aDados := {}
+	dbUseArea( .T. ,"TOPCONN",TcGenQry(,,cQuery),"ARQTRB")
+
+	TcFieldAll("ARQTRB")
+	While ARQTRB->(!Eof())
+		aVetor := {}
+		If FindFunction("ValidaCNI") .And.  ValidaCNI()
+			If lWndManutEdit
+				If ExistBlock("GCP2HEAD")
+			   		aVetTst := Execblock("GCP2HEAD", .F. , .F.  ,{ARQTRB->C1_NUMPR,aVetor})
+			   		If ValType(aVetTst) == "A"
+			 			aVetor := aVetTst
+			   		EndIf
+				EndIf
+			Else
+				aAdd(aVetor, .F. )
+			EndIf
+		Else
+			aAdd(aVetor, .F. )
+		EndIf
+
+		For nY := 1 To Len(aHeadC1)-2
+			If !Empty(ARQTRB->(FieldGet(FieldPos(aHeadC1[nY,2]))))
+				aAdd(aVetor,ARQTRB->(FieldGet(FieldPos(aHeadC1[nY,2]))))
+			Else
+				aAdd(aVetor,CriaVar(aHeadC1[nY,2]))
+			EndIf
+		next
+		aAdd(aDados,aVetor)
+		ARQTRB->(dbSkip())
+	End
+	ARQTRB->(dbCloseArea())
+
+	If ValType(oLbx) == "O"
+		oLbx:SetArray(aDados)
+		oLbx:bLine := GCAbLine(aDados)
+		oLbx:Refresh()
+	EndIf
+EndIf
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02Val(nLinha,nOpc)
+Local cProd 	:= ""
+Local i 		:= 0
+Local nP_Item 	:= 0
+Local nP_Prod 	:= 0
+Local nX 		:= 0
+Local nP_ForCli := 0
+Local nP_Loj 	:= 0
+Local nP_Nom	:= 0
+Local nOpcX		:= 0
+Local nCOLS		:= 0
+Local nPos 		:= 1
+Local cTitulo 	:= "Consultar de Preço"
+Local nPosProd 	:= aScan(oGetEdt:aHeader,{|x| ALLTrim(x[2])=="CO2_CODPRO"})
+Local nPosItem 	:= aScan(oGetEdt:aHeader,{|x| ALLTrim(x[2])=="CO2_ITEM"})
+Local nVLESTI	:= GDFieldPos("CO2_VLESTI",oGetEdt:aHeader)
+Local aArea 	:= GetArea()
+Local aCols		:= {}
+Local aColsAux	:= {}
+Local aRadio	:= {}
+
+Private nRadio	:= Nil
+Private nPreco  := CriaVar("COC_VLRCON", .F. )
+
+Static aAcols := {}
+
+nLinha := If( nLinha == nil, oGetEdt:nAt, nLinha ) ;
+nOpc := If( nOpc == nil, 3, nOpc ) ;
+
+cProd := oGetEdt:acols[nLinha,nPosProd]
+cItem := oGetEdt:acols[nLinha,nPosItem]
+
+aCloneFor := aClone(aAcols)
+
+If ( nPos := ASCAN(aAcols, {|x| x[1] == cItem} ) ) > 0
+	Acols	:= aAcols[nPos,2]
+	nPreco	:= aAcols[nPos,3]
+	nRadio	:= aAcols[nPos,4]
+EndIf
+
+If Empty(cProd)
+	Help("",1,"GCP02PRODIN")
+	Return
+Endif
+
+cTitulo := cTitulo + "Item/Produto: " + cItem + " - " + cProd
+
+aHeader	:= CriaHeader(nil,"COC_FILIAL/COC_CODEDT/COC_NUMPRO/COC_CODPRO/COC_ITEMED/COC_VLRCON",Nil,"COC")
+
+nP_ForCli	:= aScan(aHeader,{|x| Trim(x[2])=="COC_CODIGO"})
+nP_Loj  	:= aScan(aHeader,{|x| Trim(x[2])=="COC_LOJA"})
+nP_Nom 		:= aScan(aHeader,{|x| Trim(x[2])=="COC_NOME"})
+
+If Empty(aCols) .And.  (nOpc == 3 .Or.  nOpc == 5 .Or.  nOpc == 4)
+	dbSelectArea("COC")
+	dbSetOrder(1)
+	dbSeek(xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+cItem)
+
+	While COC->(!Eof()) .And.  COC->(COC_FILIAL+COC_CODEDT+COC_NUMPRO+COC_ITEMED) == xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+cItem
+		aCols := CriaAcols(aHeader,"COC",1,xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+cItem,nOpc,nil,Nil,"COC_FILIAL+COC_CODEDT+COC_NUMPRO+COC_ITEMED", .F. )
+		COC->(dbSkip())
+	EndDo
+
+ElseIf Empty(aCols)
+	aHeader := aSize(aHeader, Len(aHeader))
+	dbSelectArea("COC")
+	dbSetOrder(1)
+	dbSeek(xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+cItem)
+
+	While COC->(!Eof()) .And.  COC->(COC_FILIAL+COC_CODEDT+COC_NUMPRO+COC_ITEMED) == xFilial("COC")+M->(CO1_CODEDT+CO1_NUMPRO)+cItem
+		aAdd(aCols,Array(Len(aHeader)))
+		nCOLS++
+		For nX := 1 To Len(aHeader)
+
+			If (aHeader[nX,10] <> "V") .And.  FieldPos(aHeader[nX,2]) > 0
+				aCols[nCOLS,nX] := COC->(FieldGet(FieldPos(aHeader[nX,2])))
+			Else
+				aCols[nCOLS,nX] := CriaVar(aHeader[nX,2], .T. )
+			Endif
+		next
+
+		aADD(aCols[nCOLS], .F. )
+
+		COC->(dbSkip())
+	EndDo
+
+EndIf
+
+
+
+
+
+If nOpc == 3 .Or.  nOpc == 5 .Or.  nOpc == 4
+	nOpcX	:= 1+2+4
+Else
+	nOpcX	:= 0
+EndIf
+
+
+aColsSav := aClone(aCols)
+
+oDlg = TDialog():New(,,,, "Consulta de preço",,,.F.,,,,,,.F.,,,, 750, 500 )
+
+
+	oSize := FWDefSize():New( .T. )
+	oSize:AddObject("CABE",100,10, .T. , .T. )
+	oSize:AddObject("GETD",100,65, .T. , .T. )
+	oSize:AddObject("RODA",100,25, .T. , .T. )
+	oSize:SetWindowSize({0,0,oDlg:NHEIGHT,oDlg:NWIDTH})
+	oSize:lProp 	:= .T. 
+	oSize:aMargins := {6,6,6,6}
+	oSize:Process()
+
+	oPnCab := TPanel():Create(oDlg,oSize:GetDimension("CABE","LININI"),oSize:GetDimension("CABE","COLINI"),"",,,,,,oSize:GetDimension("CABE","XSIZE"),oSize:GetDimension("CABE","YSIZE"))
+	oPnGet := TPanel():Create(oDlg,oSize:GetDimension("GETD","LININI"),oSize:GetDimension("GETD","COLINI"),"",,,,,,oSize:GetDimension("GETD","XSIZE"),oSize:GetDimension("GETD","YSIZE"))
+	oPnRod := TPanel():Create(oDlg,oSize:GetDimension("RODA","LININI"),oSize:GetDimension("RODA","COLINI"),"Método de cálculo:",,,,,,oSize:GetDimension("RODA","XSIZE"),oSize:GetDimension("RODA","YSIZE"))
+
+
+	oSize1 := FWDefSize():New( .T. )
+	oSize1:AddObject("GRID",100,100, .T. , .T. )
+	oSize1:SetWindowSize({0,0,oPnCab:NHEIGHT,oPnCab:NWIDTH})
+	oSize1:lProp 	:= .T. 
+	oSize1:aMargins := {4,4,4,4}
+	oSize1:Process()
+
+	 TGroup():New( 05, 0, 22, 362,, oPnCab,,,.T., )
+	 TSay():New( 10, 05,{||  "Item/Produto: "+cItem+" - "+cProd},oPnCab,,,.F.,.F.,.F.,.T.,,, Len(cProd)*10, 29,.F.,.F.,.F.,.F.,.F.,.F. )
+
+
+	oSize2 := FWDefSize():New( .T. )
+	oSize2:AddObject("GRID",100,100, .T. , .T. )
+	oSize2:SetWindowSize({0,0,oPnGet:NHEIGHT,oPnGet:NWIDTH})
+	oSize2:lProp 	:= .T. 
+	oSize2:aMargins := {3,3,3,3}
+	oSize2:Process()
+
+	oGetPart := MsNewGetDados():New(oSize2:AposObj[1,1],oSize2:AposObj[1,2]-3,oSize2:AposObj[1,3],oSize2:AposObj[1,4],nOpcX,"GCP02LCons","GCP02LCons","COC_CODEDT/COC_NUMPR/COC_PRODUT",,,999,,,,oPnGet,aHeader,aCols)
+
+	aAdd( aRadio, "Média Geral" )
+	aAdd( aRadio, "Média Maior/Menor" )
+	aAdd( aRadio, "Menor Preço" )
+	aAdd( aRadio, "Maior Preço" )
+	aAdd( aRadio, "Preço Intermediário" )
+
+
+	 oRadio := TRadMenu():New( 00, 60, { aRadio[1],aRadio[2],aRadio[3],aRadio[4],aRadio[5]},{ | u | If( PCount() == 0, nRadio, nRadio := u ) }, oPnRod,,{||  (MetodoPreco(oGetPart:Acols),oPreco:Refresh())},,,,.F.,, 100, 20,,.F.,.F.,.T. )
+
+	 TSay():New( 22, 200,{||  "Preço estimado: "},oPnRod,,,.F.,.F.,.F.,.T.,,,,,.F.,.F.,.F.,.F.,.F.,.F. )
+	 oPreco := TGet():New( 20, 260, { | u | If( PCount() == 0, nPreco, nPreco := u ) },oPnRod, 80, 10, PesqPict("CO2","CO2_VLESTI"),,,,,.F.,,.T.,,.F.,,.F.,.F.,,.F.,.F. ,,"nPreco",,,, )
+
+oDlg:Activate( oDlg:bLClicked, oDlg:bMoved, oDlg:bPainted,.T.,,,{|Self|EnchoiceBar(oDlg,{||IIF(GCP02LCons(nLinha, .T. ),oDlg:End(),)},{||oDlg:End()},,)}, oDlg:bRClicked, )
+
+
+For nX := 1 To Len(oGetPart:Acols)
+	If !aTail(oGetPart:Acols[nx])
+		aAdd(aColsAux, oGetPart:Acols[nX])
+     EndIf
+Next
+aCols := aColsAux
+
+
+If nOpc <> 2
+	If (nPos := ASCAN(aAcols, {|x| x[1] == cItem})) == 0
+		aAdd(aAcols, {cItem, aClone(oGetPart:aCols), nPreco, nRadio, cProd})
+	Else
+		aAcols[nPos] := {cItem, aClone(oGetPart:aCols), nPreco, nRadio, cProd}
+	EndIf
+
+	oGetEdt:aCols[oGetEdt:oBrowse:nAt,nVLESTI] := nPreco
+Endif
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function MetodoPreco(aCols)
+Local aColsBkp 	:= aClone(aCols)
+Local AcolsAux	:= {}
+Local nX		:= 0
+Local nY		:= 0
+Local nQuant	:= 0
+Local nSoma		:= 0
+Local nPos	    := 0
+Local nMenor	:= 0
+Local nMaior	:= 0
+Local nInterm	:= 0
+
+For nX := 1 To Len(aCols)
+	If !aTail(Acols[nX])
+		AADD(AcolsAux, aCols[nX])
+	EndIf
+Next
+
+If Len(AcolsAux) > 0
+	Do Case
+	Case nRadio==1
+		For nY :=1 To Len (AcolsAux)
+			nSoma := nSoma+AcolsAux[nY,4]
+		Next
+		nQuant	:= Len(AcolsAux)
+		nPreco	:= nSoma/nQuant
+	Case nRadio==2
+		AcolsAux	:= ASort(AcolsAux,,,{|x,y|  x[4] < y[4] })
+		nMenor		:= AcolsAux[1,4]
+		nPos		:= Len(AcolsAux)
+		nMaior		:= AcolsAux[nPos,4]
+		nPreco		:= (nMenor+nMaior)/2
+	Case nRadio==3
+		AcolsAux	:= ASort(AcolsAux,,,{|x,y|  x[4] < y[4] })
+		nPreco		:= AcolsAux[1,4]
+	Case nRadio==4
+		AcolsAux	:= ASort(AcolsAux,,,{|x,y|  x[4] < y[4] })
+		nPos		:= Len(AcolsAux)
+		nPreco		:= AcolsAux[nPos,4]
+	Case nRadio==5
+		AcolsAux	:= ASort(AcolsAux,,,{|x,y|  x[4] < y[4] })
+		nPos		:= Len(AcolsAux)
+		nInterm		:= round(nPos/2,0)
+		nPreco		:= AcolsAux[nInterm,4]
+	EndCase
+EndIf
+
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPFor2()
+
+Local lRet     := .T. 
+Local i        := 0
+Local nT_aCOLS := Len(oGetPart:aCOLS)
+Local nItem    := oGetPart:oBrowse:nAt
+Local nP_For   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="COC_CODIGO"})
+Local nP_Loj   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="COC_LOJA"})
+Local nP_Nom   := aScan(oGetPart:aHeader,{|x| Trim(x[2])=="COC_NOME"})
+Local cForn    := ""
+Local cLoj	   := ""
+
+cForn	:= SA2->A2_COD
+cLoj	:= SA2->A2_LOJA
+
+If "COC_LOJA" $ ReadVar()
+	cLoj:= &(ReadVar())
+Else
+	If "COC_CODIGO" $ ReadVar()
+		cForn:= &(ReadVar())
+	EndIf
+EndIf
+
+
+If !Empty(cLoj)
+	oGetPart:aCOLS[n,nP_Loj] := Posicione("SA2",1,xFilial("SA2")+cForn+cLoj,"A2_LOJA")
+	oGetPart:aCOLS[n,nP_Nom] := Posicione("SA2",1,xFilial("SA2")+cForn+cLoj,"A2_NOME")
+	If SA2->(Eof())
+		Help("",1,"GCP02FORC")
+		lRet := .F. 
+	Endif
+	If SA2->A2_MSBLQL == "1"
+		Help("",1,"GCP02FORB")
+		lRet := .F. 
+	EndIf
+Else
+	Posicione("SA2",1,xFilial("SA2")+cForn,"A2_COD")
+	If SA2->(Eof())
+		Help("",1,"GCP02FORC")
+		lRet := .F. 
+	Endif
+EndIf
+
+For i:=1 To nT_aCOLS
+	If i <> nItem
+		If oGetPart:aCOLS[i,nP_For] == cForn .And.  oGetPart:aCOLS[i,nP_Loj] == cLoj .And.  !oGetPart:aCOLS[i,len(aCols[i])]
+			Help("",1,"GCP02FDUP")
+			lRet := .F. 
+		Endif
+	Endif
+next
+
+
+Return(lRet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCP02LCons(nLinha,lTudoOK)
+Local lRet 		:= .T. 
+Local aCols		:= oGetPart:aCols
+Local aHeader	:= oGetPart:aHeader
+Local nPosVlU	:= aScan(aHeader,{|x| AllTrim(x[2]) == "COC_PRECO"})
+Local nPosProd 	:= aScan(oGetEdt:aHeader,{|x| ALLTrim(x[2]) == "CO2_CODPRO"})
+
+nLinha := If( nLinha == nil, oGetPart:nAt, nLinha ) ;
+lTudoOK := If( lTudoOK == nil, .F. , lTudoOK ) ;
+
+Static aAcols := {}
+
+
+	nLinha := oGetPart:nAt
+
+
+If aCols[nLinha,len(aCols[nLinha])] <> .T. 
+	If lRet .And.  aCols[nLinha,nPosVlU] == 0 .Or.  Empty(aCols[nLinha,nPosProd]) .Or.  Iif(lTudoOK,nPreco <= 0, .F. )
+		Help("",1,"GCP02NOVL")
+		lRet := .F. 
+	Endif
+EndIf
+
+If lRet
+	MetodoPreco(@aCols)
+	oPreco:Refresh()
+EndIf
+
+Return lRet
+
+
+
+
+
+
+
+
+
+
+
+
+
+Function GCPViewCO3(cAcao,cAval,cCodEdt,cNumPro,cCodPro,cLte,aHeader,aCols)
+Local aAreaAnt	:= GetArea()
+Local aSldItem	:= {}
+Local cAliasCO3 := GetNextAlias()
+Local cNome		:= ""
+Local nSeek		:= 0
+Local nSeek1	:= 0
+Local nP_ForCli	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_CODIGO"})
+Local nP_Loj  	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LOJA"})
+Local nP_Nom	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_NOME"})
+Local nP_VlUn	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_VLUNIT"})
+Local nP_Revo	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_REVOGA"})
+Local nP_Rank	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_RANK"})
+Local nP_Lance	:= aScan(aHeader,{|x| AllTrim(x[2])=="CO3_LANCE"})
+Local nQuant	:= 0
+
+
+If	cAval == "1"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__execSql(cAliasCO3," SELECT CO3.R_E_C_N_O_ RecCO3 FROM  "+RetSqlName('CO3')+" CO3 WHERE CO3.CO3_FILIAL =  '" +xFilial('CO3')+"'  AND CO3.CO3_CODEDT =  "+___SQLGetValue(CCODEDT)+" AND CO3.CO3_NUMPRO =  "+___SQLGetValue(CNUMPRO)+" AND CO3.CO3_CODPRO =  "+___SQLGetValue(CCODPRO)+" AND CO3.D_E_L_E_T_= ' ' ORDER BY  "+ SqlOrder(CO3->(IndexKey())),{},.F.)
+
+ElseIf cAval == "2"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__execSql(cAliasCO3," SELECT CO3.R_E_C_N_O_ RecCO3 FROM  "+RetSqlName('CO3')+" CO3 WHERE CO3.CO3_FILIAL =  '" +xFilial('CO3')+"'  AND CO3.CO3_CODEDT =  "+___SQLGetValue(CCODEDT)+" AND CO3.CO3_NUMPRO =  "+___SQLGetValue(CNUMPRO)+" AND CO3.CO3_LOTE =  "+___SQLGetValue(CLTE)+" AND CO3.D_E_L_E_T_= ' ' ORDER BY  "+ SqlOrder(CO3->(IndexKey())),{},.F.)
+
+ElseIf	cAval == "3"
+
+
+
+
+
+
+
+
+
+
+
+
+
+__execSql(cAliasCO3," SELECT CO3.R_E_C_N_O_ RecCO3 FROM  "+RetSqlName('CO3')+" CO3 WHERE CO3.CO3_FILIAL =  '" +xFilial('CO3')+"'  AND CO3.CO3_CODEDT =  "+___SQLGetValue(CCODEDT)+" AND CO3.CO3_NUMPRO =  "+___SQLGetValue(CNUMPRO)+" AND CO3.D_E_L_E_T_= ' ' ORDER BY  "+ SqlOrder(CO3->(IndexKey())),{},.F.)
+
+EndIf
+
+While (cAliasCO3)->(!Eof())
+	CO3->(DbGoTo((cAliasCO3)->RecCO3))
+
+	If	(nSeek:=AScan(aCols,{|x| x[nP_ForCli]+x[nP_Loj]==CO3->CO3_CODIGO+CO3->CO3_LOJA}))==0
+
+		If	CO3->CO3_TIPO=="1"
+			cNome := Posicione("CO6",1,xFilial("CO6")+CO3->CO3_CODIGO+CO3->CO3_LOJA,"CO6_NOME")
+
+		Else
+			If	CO1->CO1_MODALI == "LL"
+				cNome := Posicione("SA1",1,xFilial("SA1")+CO3->CO3_CODIGO+CO3->CO3_LOJA,"A1_NOME")
+			Else
+				cNome := Posicione("SA2",1,xFilial("SA2")+CO3->CO3_CODIGO+CO3->CO3_LOJA,"A2_NOME")
+			EndIf
+
+		EndIf
+		aAdd(aCols,Array(Len(aHeader)+1))
+		nSeek := Len(aCols)
+
+		For nSeek1 := 1 To Len(aHeader)-2
+			If	aHeader[nSeek1,10]<>"V" .And.  CO3->(FieldPos(aHeader[nSeek1,2]))>0
+				aCols[nSeek,nSeek1]:=CO3->(FieldGet(FieldPos(aHeader[nSeek1,2])))
+			Else
+				aCols[nSeek,nSeek1]:=CriaVar(aHeader[nSeek1,2], .T. )
+			EndIf
+		Next
+		aCols[nSeek,nP_Nom]:=cNome
+		If	(cAval=="2" .Or.  cAval=="3") .And.  CO3->CO3_REVOGA<>"1" .And.  (CO3->CO3_CLASS=="1" .Or.  CO3->CO3_CLAANT=="1")
+			CO2->(DbSetOrder(1))
+			CO2->(DbSeek(xFilial("CO2")+M->CO1_CODEDT+M->CO1_NUMPRO+CO3->CO3_CODPRO))
+
+			nQuant:=CO2->CO2_QUANT
+			aSldItem := {M->CO1_CODEDT,M->CO1_NUMPRO,CO3->CO3_CODPRO}
+			GCPSldItem("3",aSldItem)
+
+
+			If	aSldItem[1]<nQuant
+				nQuant -= aSldItem[1]
+			EndIf
+			aCols[nSeek,nP_VlUn]:=nQuant*CO3->CO3_VLUNIT
+
+		Else
+			aCols[nSeek,nP_VlUn]:=CO3->CO3_VLUNIT
+		EndIf
+		If	CO3->CO3_REVOGA=="1"
+			aCols[nSeek,nP_Revo]:=CO3->CO3_REVOGA
+		EndIf
+		aCols[nSeek,Len(aHeader)+1] := .F. 
+
+	Else
+		If	(cAval=="2" .Or.  cAval=="3") .And.  CO3->CO3_REVOGA<>"1" .And.  (CO3->CO3_CLASS=="1" .Or.  CO3->CO3_CLAANT=="1")
+			CO2->(DbSetOrder(1))
+			CO2->(DbSeek(xFilial("CO2")+M->CO1_CODEDT+M->CO1_NUMPRO+CO3->CO3_CODPRO))
+
+			nQuant:=CO2->CO2_QUANT
+			aSldItem := {M->CO1_CODEDT,M->CO1_NUMPRO,CO3->CO3_CODPRO}
+			GCPSldItem("3",aSldItem)
+
+
+			If	aSldItem[1]<nQuant
+				nQuant -= aSldItem[1]
+			EndIf
+			aCols[nSeek,nP_VlUn]+=nQuant*CO3->CO3_VLUNIT
+		EndIf
+		If	CO3->CO3_REVOGA=="1"
+			aCols[nSeek,nP_Revo]:=CO3->CO3_REVOGA
+		EndIf
+	EndIf
+
+	(cAliasCO3)->(DbSkip())
+EndDo
+(cAliasCO3)->(DbCloseArea())
+
+If	!Empty(aCols)
+	ASort(aCols,,,{|x,y|x[nP_Rank] < y[nP_Rank]})
+EndIf
+RestArea(aAreaAnt)
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AjustaSX5()
+
+Local aArea:= GetArea()
+
+dbSelectArea("SX5")
+
+If dbSeek(xFilial()+"LE"+"PR")
+	RecLock("SX5", .F. )
+		X5_DESCRI  := "Processo Revogado"
+		X5_DESCSPA := "Proceso Revocado"
+		X5_DESCENG := "Process Denied"
+	MsUnlock()
+EndIf
+
+If dbSeek(xFilial()+"LE"+"PE")
+	RecLock("SX5", .F. )
+		X5_DESCRI  := "Processo Encerrado"
+		X5_DESCSPA := "Proceso Finalizado"
+		X5_DESCENG := "Process Closed"
+	MsUnlock()
+EndIf
+
+If !dbSeek(xFilial()+"LE"+"AP")
+	RecLock("SX5", .T. )
+		X5_TABELA  := "LE"
+		X5_CHAVE   := "AP"
+		X5_DESCRI  := "Ata de Sistema Registro de Preço"
+		X5_DESCSPA := "Acta de Sistema Registro de Precio"
+		X5_DESCENG := "Register of Price Record"
+	MsUnlock()
+EndIf
+
+If !dbSeek(xFilial()+"LG"+"MP")
+	RecLock("SX5", .T. )
+		X5_FILIAL	:= xFilial()
+		X5_TABELA  := "LG"
+		X5_CHAVE   := "MP"
+		X5_DESCRI  := "Menor Preço"
+		X5_DESCSPA := "Precio más Bajo"
+		X5_DESCENG := "Lowest Price"
+	MsUnlock()
+EndIf
+
+If !dbSeek(xFilial()+"LG"+"TP")
+	RecLock("SX5", .T. )
+		X5_FILIAL	:= xFilial()
+		X5_TABELA  := "LG"
+		X5_CHAVE   := "TP"
+		X5_DESCRI  := "Técnica e Preço"
+		X5_DESCSPA := "Tecnica y Precio"
+		X5_DESCENG := "Technique and Price"
+	MsUnlock()
+EndIf
+
+
+If dbSeek(xFilial()+"LG"+"PR")
+	RecLock("SX5", .F. )
+		X5_CHAVE   := "PP"
+		X5_DESCRI  := "Pregao Presencial"
+	MsUnlock()
+EndIf
+RestArea(aArea)
+
+Return
+
+
+
+
+
+
+
+
+
+Function GCP02VldRev()
+Local cLote:= ""
+Local lRet := .T. 
+Local nSeek:= 0
+Local nPRev:= IIF(Type("oGetEdt") <> "U",GDFieldPos("CO2_FRACAS",oGetEdt:aHeader),0)
+Local nPLot:= IIF(Type("oGetEdt") <> "U",GDFieldPos("CO2_LOTE",oGetEdt:aHeader),0)
+
+lRet := Pertence("SN")
+
+If	lRet .And.  (nPRev <> 0 .And.  nPLot <> 0)
+
+	If	M->CO1_AVAL$"23"
+
+		cLote := GDFieldGet("CO2_LOTE",oGetEdt:nAt,,oGetEdt:aHeader,oGetEdt:aCols)
+
+		For nSeek := 1 To Len(oGetEdt:aCols)
+			If	oGetEdt:aCols[nSeek,nPLot]==cLote
+				oGetEdt:aCols[nSeek,nPRev] := M->CO2_FRACAS
+			EndIf
+		Next
+
+		oGetEdt:Refresh()
+
+	EndIf
+
+EndIf
+
+Return(lRet)
+
+
+
+
+
+
+
+
+
+Function GCP02Rpl(nLinha,cLte,cObsRev,nPosLote,nPosObs)
+Local n1Cnt := 0
+
+For n1Cnt := 1 To Len(oGetEdt:aCols)
+	If	cLte == oGetEdt:aCols[n1Cnt,nPosLote]
+		oGetEdt:aCols[n1Cnt,nPosObs] := cObsRev
+	EndIf
+Next
+Return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AjustaHelp()
+Local aArea 	:= GetArea()
+Local aHelpPor	:= {}
+Local aHelpEng	:= {}
+Local aHelpSpa	:= {}
+
+
+aHelpPor :=	{"O edital não pode ser encerrado."}
+aHelpSpa :=	{"Lo edicto no se puede terminar."}
+aHelpEng :=	{"The licitation issuance can not be terminated."}
+PutHelp("PGCP02NOENC",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+aHelpPor :=	{"Encerre um edital em aberto."}
+aHelpSpa :=	{"Apague un edicto abierto."}
+aHelpEng :=	{"Finish an edict open."}
+PutHelp("SGCP02NOENC",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+
+aHelpPor :=	{"Para a modalidade 'Leilão (LL)' não é ", "possível carregar solicitação de compras."}
+aHelpSpa :=	{"Para la modalidad 'subasta (LL)' ", "imposible cargar solicitud de compras."}
+aHelpEng :=	{"For the modality 'Auction (LL)' ", "can not load purchases request."}
+PutHelp("PGCPA02MDLL",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+aHelpPor :=	{"Para incluir edital utilizando a ", "modalidade Leilão (LL) faça pelo ","procedimento padrão clicando em Incluir."}
+aHelpSpa :=	{"Para incluir un aviso público ", "mediante el modo Subasta (LL) que el", "procedimiento estándar haciendo clic en Agregar."}
+aHelpEng :=	{"To include public notice using the ", "Auction mode (LL) make the standard procedure ","by clicking Add."}
+PutHelp("SGCPA02MDLL",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+aHelpPor :=	{"Somente edital em aberto poderá ser", "revogado."}
+aHelpSpa :=	{"Solo podra revocarse edicto abierto"}
+aHelpEng :=	{"You can only revoke an open public", "notice."}
+PutHelp("PGCP02NOREV",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+aHelpPor :=	{"Edital não revogado."}
+aHelpSpa :=	{"Edicto no derogado."}
+aHelpEng :=	{"Public notice not revoked."}
+PutHelp("PGCP02REV",aHelpPor,aHelpEng,aHelpSpa, .F. )
+
+RestArea(aArea)
+Return
+
+
+
+
+
+
+
+
+
+
+Function GCPA02Rev()
+Local lPrjCni := FindFunction("ValidaCNI") .And.  ValidaCNI()
+Local lOk     := .T. 
+Local cCO7Acao:= ""
+Local cMotivo := Space(200)
+Local cFilSC1 := xFilial("SC1")
+Local aGrvCO1 := {}
+Local aGrvCO7 := {}
+Local aRet    := {}
+Local aParam  := {}
+LocaL aArea	:= GetArea()
+
+
+If CO1->CO1_ETAPA $ "PE,PC,FV,CO,PM,PR,CE"
+	Help("",1,"GCP02NOREV")
+	lOk  := .F. 
+Endif
+
+
+If lOk .And.  (lOk := Iif(FindFunction("APMsgYesNo"), APMsgYesNo(STR0135+Alltrim(CO1->CO1_CODEDT)+"?", cCadastro), (cMsgYesNo:="MsgYesNo", &cMsgYesNo.(STR0135+Alltrim(CO1->CO1_CODEDT)+"?", cCadastro))))
+
+
+	AAdd(aRet,cMotivo)
+
+
+	AAdd(aParam,{1,STR0136,aRet[1],"@!","","","",125, .T. })
+
+
+	lOk := ParamBox(aParam,"Motivo",@aRet,,, .T. ,80,3)
+
+	If lOk .And.  !Empty(aRet[1])
+
+		Begin Sequence; BeginTran()
+
+		cMotivo := aRet[1]
+
+		cCO7Acao := "Passo: " + CO1->CO1_PASSO + chr(13)+chr(10)
+		cCO7Acao += STR0137 + chr(13)+chr(10)
+		cCO7Acao += "Motivo: " + chr(13)+chr(10) + cMotivo + chr(13)+chr(10)
+
+		aGrvCO1 := {	{"CO1_ETAPA" , "PR"      }}
+
+
+
+
+
+
+
+
+
+
+		aGrvCO7 :=	{	{"CO7_CODEDT", CO1->CO1_CODEDT}, {"CO7_NUMPRO", CO1->CO1_NUMPRO}, {"CO7_VERSAO", CO1->CO1_VERSAO}, {"CO7_DTMOV" , dDataBase}, {"CO7_HRMOV" , Time()}, {"CO7_CODUSU", Upper(Alltrim(Substr(cUsuario,7,15)))}, {"CO7_MOVATU", "PR"}, {"CO7_DESATU", STR0119}, {"CO7_ACAO"  , cCO7Acao }, {"CO7_PASATU", CO1->CO1_PASSO}}
+
+		GCPA006(aGrvCO7, aGrvCO1)
+
+
+		dbSelectArea("SC1")
+		dbSetOrder(8)
+		While dbSeek(cFilSC1+CO1->CO1_CODEDT+CO1->CO1_NUMPRO)
+			RecLock("SC1", .F. )
+			SC1->C1_CODED		:= ""
+			SC1->C1_NUMPR		:= ""
+			SC1->C1_MODAL		:= ""
+			SC1->C1_TPMOD		:= ""
+			SC1->C1_COTACAO	:= ""
+			SC1->(MsUnLock())
+
+			If lPrjCni
+				RSTSCLOG("EDT",2,)
+			EndIf
+		EndDo
+
+		EndTran(); end
+
+	Else
+		Help("",1,"GCP02REV")
+	Endif
+EndIf
+
+RestArea(aArea)
+
+Return

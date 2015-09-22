@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Workflow Contratos</title>
+		<style type="text/css">
+			.RED {
+				color: #F00;
+			}
+			.STRONG{
+				font-weight:bold;
+			}
+			.CENTER {
+				text-align: center;
+			}
+			.BlueValor {
+				color: #00F;
+			}
+			BODY TD{
+				vertical-align: top;
+				padding: 5px;
+			}
+			P{
+				text-align: Justify;
+			}
+		</style>
+	</head>
+	<body>
+		<H1 class="RED">AVISO DE VENCIMENTO DE CONTRATO %cNrAviso%</H1>
+		
+		<table>
+			<tr>
+				<td>Nº DO CONTRATO:</td>
+				<td>%cNrCtr%</td>
+			</tr>
+			<tr>
+				<td>Tipo de Contrato:</td>
+				<td>%cTpCtr%</td>
+			</tr>
+			<tr>
+				<td>Fornecedor:</td>
+				<td>%cFornec%</td>
+			</tr>
+			<tr>
+				<td>Objeto:</td>
+				<td>%cDsObj%</td>
+			</tr>
+			<tr>
+				<td>Data de Assinatura:</td>
+				<td>%cDtAss%</td>
+			</tr>
+			<tr>
+				<td>Início de Execução:</td>
+				<td>%cDtIniE%</td>
+			</tr>
+			<tr>
+				<td class="RED STRONG">Fim de Execução:</td>
+				<td class="RED STRONG">%cDtFimE%</td>
+			</tr>
+			<tr>
+				<td>Início de Vigência:</td>
+				<td>%cDtIniV%</td>
+			</tr>
+			<tr>
+				<td class="RED STRONG">Fim de Vigência:</td>
+				<td class="RED STRONG">%cDtFimV%</td>
+			</tr>
+			<tr>
+				<td>Valor Global:</td>
+				<td>%cVlGlob%</td>
+			</tr>
+			<tr>
+				<td>Fiscal(is):</td>
+				<td>%cFiscais%</td>
+			</tr>
+			<tr>
+				<td>Gestor(es):</td>
+				<td>%cGestores%</td>
+			</tr>
+		</table>
+
+		<p>O prazo de execução do contrato em tela expirará em <span class="RED STRONG">%cDias% (%cDiasExt%) dias</span>. Assim, caso haja interesse em prorrogar o contrato ou promover nova contratação (através de licitação ou contratação por dispensa ou inexigibilidade), os procedimentos cabíveis deverão ser adotados pelo Gestor e/ou Fiscal, observando as normas estabelecidas no Manual de Contratos e Aditamentos, com antecedência mínima de <span class="RED STRONG">60 (SESSENTA) dias</span> antes do término do atual contrato.</p>
+		<p>Em não havendo necessidade de dar continuidade aos serviços, gentileza informar ao DELI, no e-mail <a href="mailto:licitacao@cohapar.pr.gov.br">licitacao@cohapar.pr.gov.br</a> ou <a href="mailto:licitacao@cohapar.pr.gov.br">CLICANDO AQUI</a>, para baixa nos controles deste Departamento.</p>
+		<p>Em caso de dúvidas, consultar o Manual de Contratos e Aditamentos disponível na Intranet.</p>
+		<p>Se necessário, entrar em contato com o DELI (3312-5876 / 3312-5782).</p>
+		<p>Este aviso é gerado automaticamente pelo GESTÃO DE CONTRATOS COHAPAR</p>
+	</body>
+</html>

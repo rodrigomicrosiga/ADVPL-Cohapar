@@ -1,0 +1,68 @@
+html, body, * {
+    font-family:Verdana;
+    font-size: small;
+}
+
+h1{
+    font-size: x-large;
+}
+
+h2{
+	font-size: large;
+}
+
+div.aba{
+    height:700px;
+}
+
+span.resultado{
+    color:white;
+}
+
+span.sucesso{
+    background-color: #007803;
+}
+
+span.erro{
+    background-color: red;
+}
+
+table.dataTableGrid{
+    width: 100%;
+}
+
+table.dataTableGrid td{
+    padding: 3px 10px;
+}
+
+.dataTables_empty {
+    text-align: center;
+}
+
+.header label{
+    font-weight: bold;
+}
+
+.header input[type="TEXT"]{
+    border:none;
+    background: transparent;
+}
+
+tr.odd {
+	background-color: #e8f0f7;
+}
+
+tr.even {
+	background-color: white;
+}
+
+.situacao, .filial, .numero, .tipo, .natureza, .fornecedor, 
+.parcela, .vencimento, .item , .produto, .descricao, .unidade , .quantidade, .ccusto, .rateio, .responsavel, .observacao, .situacao, .data_aprovacao{
+    text-align: center;
+}
+
+
+.valor, .valor_unitario, .valor_total, .valor_ipi, .valor_icms{
+	text-align: right;	
+}
+

@@ -1,0 +1,895 @@
+<list>
+  <ProcessDefinition>
+    <processDefinitionPK>
+      <companyId>1</companyId>
+      <processId>Pagamento</processId>
+    </processDefinitionPK>
+    <processDescription>Aprovação de pagamentos</processDescription>
+    <instruction>O workflow de aprovação de pagamentos é iniciado a partir da geração de um lote de títulos no Protheus o que inicia uma solicitação de análise do lote no ByYou ECM.O aprovador da solicitação é o responsável pelo centro de custo dos títulos do lote e deve possuir o papel de “Aprovador Financeiro?? no ByYou ECM.&#xd;
+&#xd;
+Na atividade &quot;Analisar lote de títulos&quot; o aprovador analisa os títulos do lote podendo aprovar, reprovar ou manter o título pendente de análise.Feita a análise dos títulos do lote o aprovador deve enviar para atividade &quot;Fechar Lote&quot;, onde o lote é fechado no Protheus. Com isto o lote está apto a ser inserido em um borderô de pagamentos no Protheus.Se todos os títulos forem aprovados, o lote é fechado no Protheus e a solicitação é finalizada.&#xd;
+&#xd;
+Se houverem títulos reprovados, o lote é fechado no Protheus mas a solicitação é encaminhada para um colaborador com o papel &quot;Financeiro&quot; para que ele tome ciência do ocorrido. Somente após esta atividade a solicitação poderá ser finalizada.</instruction>
+    <active>true</active>
+    <publicProcess>false</publicProcess>
+    <volumeId>Default</volumeId>
+    <categoryId>Pagamentos</categoryId>
+    <managerEngineAllocationId></managerEngineAllocationId>
+    <snapshotFrequency>0</snapshotFrequency>
+    <baseDay>0</baseDay>
+    <baseMonth>0</baseMonth>
+    <periodId>Default</periodId>
+    <uniqueCardVersion>false</uniqueCardVersion>
+    <keyWord></keyWord>
+  </ProcessDefinition>
+  <ProcessDefinitionVersion>
+    <processDefinitionVersionPK>
+      <companyId>1</companyId>
+      <processId>Aprovação de pagamentos</processId>
+      <version>51</version>
+    </processDefinitionVersionPK>
+    <versionDescription>Nova Versão.</versionDescription>
+    <formId>39</formId>
+    <editionMode>true</editionMode>
+    <updateAttachmentsVersion>false</updateAttachmentsVersion>
+    <controlsAttachmentsSecurity>false</controlsAttachmentsSecurity>
+    <active>true</active>
+    <blockedVersion>false</blockedVersion>
+    <counterSign>false</counterSign>
+    <openInstances>0</openInstances>
+    <bpmnVersion>1</bpmnVersion>
+    <processStates/>
+    <favorito>false</favorito>
+    <inheritFormSecurity>false</inheritFormSecurity>
+  </ProcessDefinitionVersion>
+  <list>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>1</sequence>
+      </processStatePK>
+      <stateName>Enviar lote de títulos</stateName>
+      <stateDescription>Enviar lote de títulos</stateDescription>
+      <instruction></instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId></engineAllocationId>
+      <engineAllocationConfiguration></engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>true</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>true</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>84</positionX>
+      <positionY>35</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>0</stateType>
+      <bpmnType>10</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>2</sequence>
+      </processStatePK>
+      <stateName>Analise aprovador</stateName>
+      <stateDescription>Analise aprovador</stateDescription>
+      <instruction>Nesta etapa é feita a análise de um lote de títulos a pagar no Protheus. Na aba &quot;Aprovação&quot; é possível alterar a situação de aprovação dos títulos para: Aprovado, Reprovado ou Pendente. Caso não existam títulos pendentes de análise, é possível enviar para atividade &quot;Fechar Lote&quot;.</instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId>Campo Formulário</engineAllocationId>
+      <engineAllocationConfiguration>&lt;AssignmentController&gt;&lt;FormField&gt;aprovador&lt;/FormField&gt;&lt;/AssignmentController&gt;</engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>true</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>312</positionX>
+      <positionY>133</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>true</inhibitTransfer>
+      <periodId>Default</periodId>
+      <stateType>0</stateType>
+      <bpmnType>80</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>5</sequence>
+      </processStatePK>
+      <stateName>Analise Documentação</stateName>
+      <stateDescription>Analise Documentação</stateDescription>
+      <instruction>Os títulos reprovados devem ser analisados.Envie para atividade &quot;Finalizar - lote aprovado&quot; para registrar ciência do ocorrido.</instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId>Papel</engineAllocationId>
+      <engineAllocationConfiguration>&lt;AssignmentController&gt;&lt;Role&gt;AprovadorFinanceiro&lt;/Role&gt;&lt;/AssignmentController&gt;</engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>true</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>312</positionX>
+      <positionY>267</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId>Default</periodId>
+      <stateType>0</stateType>
+      <bpmnType>80</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>3</sequence>
+      </processStatePK>
+      <stateName>Aprova</stateName>
+      <stateDescription>Aprova</stateDescription>
+      <joint>false</joint>
+      <initialState>false</initialState>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <automatic>true</automatic>
+      <positionX>336</positionX>
+      <positionY>8</positionY>
+      <inhibitTransfer>false</inhibitTransfer>
+      <stateType>1</stateType>
+      <bpmnType>120</bpmnType>
+      <signalId>0</signalId>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>12</sequence>
+      </processStatePK>
+      <stateName>Encerra</stateName>
+      <stateDescription>Encerra</stateDescription>
+      <joint>false</joint>
+      <initialState>false</initialState>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <automatic>true</automatic>
+      <positionX>192</positionX>
+      <positionY>258</positionY>
+      <inhibitTransfer>false</inhibitTransfer>
+      <stateType>1</stateType>
+      <bpmnType>120</bpmnType>
+      <signalId>0</signalId>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>6</sequence>
+      </processStatePK>
+      <stateName>Finalizar - Lote aprovado</stateName>
+      <stateDescription>Finalizar - Lote aprovado</stateDescription>
+      <instruction>Atividade final do processo</instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId></engineAllocationId>
+      <engineAllocationConfiguration></engineAllocationConfiguration>
+      <selectColleague>0</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>0</allowanceAuthorityTime>
+      <frequenceAuthorityTime>1</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>false</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>640</positionX>
+      <positionY>298</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>0</stateType>
+      <bpmnType>60</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+  </list>
+  <list>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <expressionOrder>1</expressionOrder>
+        <version>51</version>
+        <sequence>3</sequence>
+      </conditionProcessStatePK>
+      <condition>true;</condition>
+      <destinationSequenceId>5</destinationSequenceId>
+      <engineAllocationId></engineAllocationId>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <expressionOrder>1</expressionOrder>
+        <version>51</version>
+        <sequence>12</sequence>
+      </conditionProcessStatePK>
+      <condition>hAPI.getCardValue(&quot;select_fin&quot;) == &quot;Fn&quot;</condition>
+      <destinationSequenceId>6</destinationSequenceId>
+      <engineAllocationId></engineAllocationId>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <expressionOrder>2</expressionOrder>
+        <version>51</version>
+        <sequence>12</sequence>
+      </conditionProcessStatePK>
+      <condition>hAPI.getCardValue(&quot;select_fin&quot;) == &quot;An&quot;</condition>
+      <destinationSequenceId>2</destinationSequenceId>
+      <engineAllocationId></engineAllocationId>
+    </ConditionProcessState>
+  </list>
+  <list>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>2</linkSequence>
+      </processLinkPK>
+      <actionLabel> </actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>2</initialStateSequence>
+      <finalStateSequence>3</finalStateSequence>
+      <returnLabel> </returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>7</linkSequence>
+      </processLinkPK>
+      <actionLabel> </actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>3</initialStateSequence>
+      <finalStateSequence>5</finalStateSequence>
+      <returnLabel> </returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>15</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>12</initialStateSequence>
+      <finalStateSequence>6</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>16</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>5</initialStateSequence>
+      <finalStateSequence>12</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>23</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>12</initialStateSequence>
+      <finalStateSequence>2</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>24</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>1</initialStateSequence>
+      <finalStateSequence>2</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <type>0</type>
+    </ProcessLink>
+  </list>
+  <list/>
+  <list>
+    <WorkflowProcessEvent>
+      <workflowProcessEventPK>
+        <companyId>1</companyId>
+        <eventId>beforeTaskSave</eventId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+      </workflowProcessEventPK>
+      <eventDescription>function beforeTaskSave(colleagueId, nextSequenceId, userList) {
+	log.info(&quot;BEFORE TASK SAVE&quot;);
+	var state = getValue(&quot;WKNumState&quot;);
+	var ID_WKF_ACTIVITY_ANALISAR_TITULOS = 2;
+	var ID_WKF_ACTIVITY_FINANCEIRO = 5;
+	// Atividade 2 - Analisar titulos
+	if (state == ID_WKF_ACTIVITY_ANALISAR_TITULOS &amp;&amp; possuiTitulosAlterados()) {
+		log.info(&quot; :: Atividade 2 - Analisar titulos: before Task Save - Vai gravar titulos no Protheus&quot;);
+		try {
+			var colleagueName = getColleagueName(colleagueId);
+			var retornoWS = gravarLote(colleagueName);
+			log.info(&quot;retornoWS:&quot; + retornoWS);
+		} catch (e) {
+			log.info(&quot;Erro ao gravar lote&quot;);
+			log.info(e);
+			enviarEmail(e);
+			throw &quot;Problemas ao gravar lote no Protheus&quot;;
+		}
+		if (!isResponseOK(retornoWS)) {
+			throw retornoWS;
+		}
+	} else if (state == ID_WKF_ACTIVITY_FINANCEIRO &amp;&amp; getValue(&quot;WKCompletTask&quot;) != &quot;true&quot;) {
+		// Neste caso foi clicado no bot?o salvar, e n?o enviar
+		throw &quot;N?o ? poss?vel salvar a ficha nesta atividade, apenas enviar para atividade Fim&quot;;
+	}
+}
+
+function getColleagueName(colleagueId) {
+	var filter = new java.util.HashMap();
+	filter.put(&quot;colleaguePK.colleagueId&quot;, colleagueId);
+	var colaborador = getDatasetValues(&apos;colleague&apos;, filter);
+	var name = colaborador.get(0).get(&quot;colleagueName&quot;);
+	log.info(name);
+	return name;
+}
+
+function possuiTitulosAlterados() {
+	var titulos = getTitulosAlteradosJSONArray();
+	return titulos != null &amp;&amp; titulos.length() &gt; 0;
+}
+
+function getTitulosAlteradosJSONArray() {
+	var titulos_string = hAPI.getCardValue(&quot;titulos_alterados_json&quot;);
+	log.info(&quot;hidden titulos... : titulos alterados&quot;);
+	log.info(titulos_string);
+	var param = &quot;&quot;;
+	if (titulos_string &amp;&amp; titulos_string.trim() != &quot;&quot;) {
+		var jsonArray = new org.json.JSONArray(titulos_string);
+		return jsonArray;
+	}
+	log.info(&quot;WS PARAM:&quot;);
+	log.info(param);
+	log.info(&quot;ENDOF WS PARAM:&quot;);
+}
+
+function gravarLote(colleagueName) {
+	var jsonArray = getTitulosAlteradosJSONArray();
+	var param = &quot;&quot;;
+	for (var i = 0; i &lt; jsonArray.length(); i++) {
+		var jsonObject = jsonArray.getJSONObject(i);
+		param = param + getItemLote(colleagueName, jsonObject);
+	}
+	log.info(&quot;WS PARAM:&quot;);
+	log.info(param);
+	log.info(&quot;ENDOF WS PARAM:&quot;);
+	return call_ws(param);
+}
+
+function getItemLote(colleagueName, jsonObject) {
+	var SEP = &quot;|&quot;;
+	var user = colleagueName;
+	var lote = jsonObject.get(&quot;lote&quot;);
+	var ccusto = jsonObject.get(&quot;ccusto&quot;).trim();
+	var filial = jsonObject.get(&quot;filial&quot;).trim();
+	var prefixo = jsonObject.get(&quot;prefixo&quot;).trim();
+	var numero = jsonObject.get(&quot;numero&quot;).trim();
+	var parcela = jsonObject.get(&quot;parcela&quot;).trim();
+	var tipo = jsonObject.get(&quot;tipo&quot;).trim();
+	var fornecedor = jsonObject.get(&quot;fornecedor&quot;).trim();
+	var situacao = jsonObject.get(&quot;situacao&quot;).trim();
+	var observacao = jsonObject.get(&quot;observacao&quot;).trim() == &quot;&quot; ? &quot; &quot; : jsonObject.get(&quot;observacao&quot;);
+	log.info(&quot;WS CALL - - GRAVA TITULO ##################################&quot;);
+	log.info(&quot;user: &quot; + user);
+	log.info(&quot;lote: &quot; + lote);
+	log.info(&quot;ccusto:&quot; + ccusto);
+	log.info(&quot;filial: &quot; + filial);
+	log.info(&quot;prefixo:&quot; + prefixo);
+	log.info(&quot;numero:&quot; + numero);
+	log.info(&quot;parcela:&quot; + parcela);
+	log.info(&quot;tipo:&quot; + tipo);
+	log.info(&quot;fornecedor:&quot; + fornecedor);
+	log.info(&quot;situacao:&quot; + situacao);
+	log.info(&quot;observacao:&quot; + observacao);
+
+	var itemLote = user + SEP + lote + SEP + ccusto + SEP + filial + SEP + prefixo + SEP + numero + SEP + parcela + SEP + tipo + SEP + fornecedor
+			+ SEP + situacao + SEP + observacao + SEP;
+
+	return itemLote;
+}
+
+function call_ws(param) {
+	var ID_SERVICO = &quot;KITPAGAMENTO&quot;;
+	log.info(&quot;[log] CALL_WS  ID_SERVICO &quot;);
+	var NOME_CLASSE = &quot;br.com.bravaecm.kitpagamentos.BRVKITPAGAMENTOSLocator&quot;;
+	log.info(&quot;[log] CALL_WS NOME_CLASSE &quot;);
+	var locator = getLocatorServico(ID_SERVICO, NOME_CLASSE);
+	log.info(&quot;[log] CALL_WS LOCATOR &quot;);
+	var servicoSOAP = locator.getBRVKITPAGAMENTOSSOAP();
+	log.info(&quot;[log] CALL_WS SERVICOSOAP &quot;);
+	return servicoSOAP.GRAVARLOTE(param);
+	/*var sResult = servicoSOAP.GRAVARLOTE(param);
+	
+	var aResult = new String(sResult).split(&quot;|&quot;);
+	var sStatus = aResult[0];
+	log.info(&quot;[LOG] Retorno do sistema Protheus: &quot; + sStatus);
+	
+	if(sStatus == &quot;OK&quot;){
+		log.info(&quot;[LOG] O l?der da OS &quot; + os + &quot; foi alterado com sucesso no Sistema Protheus.&quot;);
+	}else{
+		log.info(&quot;[LOG] Ocorreu um erro ao alterar o l?dero no sistema Protheus.&quot;);
+	}*/
+}
+
+function getLocatorServico(idServico, nmClasseLocator) {
+	var servico = ServiceManager.getService(idServico);
+	if (servico == null)
+		throw java.lang.String.format(&quot;Servico &apos;%s&apos; n?o cadastrado!&quot;, idServico);
+
+	var bean = servico.getBean();
+	var locator = null;
+	try {
+		locator = bean.instantiate(nmClasseLocator);
+	} catch (e) {
+		throw java.lang.String.format(&quot;Erro ao obter inst?ncia da classe &apos;%s&apos; a partir do servi?o &apos;%s&apos;: %s&quot;, nmClasseLocator, idServico, e);
+	}
+
+	return locator;
+}</eventDescription>
+    </WorkflowProcessEvent>
+    <WorkflowProcessEvent>
+      <workflowProcessEventPK>
+        <companyId>1</companyId>
+        <eventId>fecharLote</eventId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+      </workflowProcessEventPK>
+      <eventDescription>function fecharLote() {
+	var ID_SERVICO = &quot;KITPAGAMENTO&quot;;
+	var NOME_CLASSE = &quot;br.com.bravaecm.kitpagamentos.BRVKITPAGAMENTOSLocator&quot;;
+	var lote = hAPI.getCardValue(&quot;lote&quot;);
+	log.info(lote);
+	var ccusto = hAPI.getCardValue(&quot;centroCusto&quot;);
+	log.info(ccusto);
+	log.info(&quot;Vai chamar WS Fechar lote:.....................&quot;);
+	var locator = getLocatorServico(ID_SERVICO, NOME_CLASSE);
+	var servicoSOAP = locator.getBRVKITPAGAMENTOSSOAP();
+	// Passar parametro CMOVIMENTA LOTE = &apos;N&apos; para o Protheus n?o movimentar o
+	// processo.
+	var retornoWS = servicoSOAP.FECHARLOTE(lote, ccusto, &quot;N&quot;);
+	return retornoWS;
+}
+
+function possuiTitulosReprovados() {
+	log.info(&quot;VERIFICACAO DE TITULO REPROVADO&quot;);
+	log.info(&quot;###################################&quot;);
+	var possuiReprovados = hAPI.getCardValue(&quot;possui_reprovados&quot;);
+	log.info(possuiReprovados);
+	if (possuiReprovados == &quot;true&quot;) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function getLocatorServico(idServico, nmClasseLocator) {
+	var servico = ServiceManager.getService(idServico);
+
+	if (servico == null)
+		throw java.lang.String.format(&quot;Servi?o &apos;%s&apos; n?o cadastrado!&quot;, idServico);
+
+	var bean = servico.getBean();
+	var locator = null;
+
+	try {
+		locator = bean.instantiate(nmClasseLocator);
+	} catch (e) {
+		throw java.lang.String.format(&quot;Erro ao obter inst?ncia da classe &apos;%s&apos; a partir do servi?o &apos;%s&apos;: %s&quot;, nmClasseLocator, idServico, e);
+	}
+
+	return locator;
+}
+
+function enviarEmail(erro) {
+	try {
+		// Monta mapa com par?metros do template
+		var parametros = new java.util.HashMap();
+		parametros.put(&quot;NOME_KIT&quot;, getValue(&quot;WKDef&quot;) + &quot; - Solicita??o: &quot; + getValue(&quot;WKNumProces&quot;));
+		parametros.put(&quot;ERRO_INTEGRACAO&quot;, erro);
+		// Este par?metro obrigat?rio e representa o assunto do e-mail
+		parametros.put(&quot;subject&quot;, &quot;[&quot; + getValue(&quot;WKDef&quot;) + &quot;]&quot; + &quot; Erro integra??o&quot;);
+		// Monta lista de destinat?rios
+		var destinatarios = new java.util.ArrayList();
+		var matriculaDestinatario = hAPI.getAdvancedProperty(&quot;COLLEAGUE_ID_TI&quot;);
+		var codTemplate = hAPI.getAdvancedProperty(&quot;ID_INTEGRATION_ERROR_MAIL_TEMPLATE&quot;);
+		destinatarios.add(matriculaDestinatario);
+		// Envia e-mail
+		notifier.notify(&quot;integrator&quot;, codTemplate, parametros, destinatarios, &quot;text/html&quot;);
+	} catch (e) {
+		log.info(e);
+	}
+
+}
+
+function enviarPara(state, user) {
+	var users = new java.util.ArrayList();
+	if (user) {
+		users.add(user);
+	}
+
+	hAPI.setAutomaticDecision(state, users, &quot;Decis?o tomada automaticamente pelo ECM.&quot;);
+	return false;
+}
+
+function isResponseOK(response) {
+	log.info(&quot;RESPONSE:&quot; + response);
+	var retorno = new java.lang.String(response);
+	var retornoSemEspacos = retorno.trim();
+	return retornoSemEspacos == &quot;OK&quot;;
+}</eventDescription>
+    </WorkflowProcessEvent>
+    <WorkflowProcessEvent>
+      <workflowProcessEventPK>
+        <companyId>1</companyId>
+        <eventId>beforeStateEntry</eventId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+      </workflowProcessEventPK>
+      <eventDescription>function beforeStateEntry(sequenceId) {
+
+	var nProcesso = getValue(&quot;WKNumProces&quot;);
+	var atividadeAtual = getValue(&quot;WKNumState&quot;);
+	var proximaAtividade = sequenceId;
+
+	log.info(&quot;[LOG] Evento: beforeStateEntry&quot;);
+	log.info(&quot;[LOG] Processo: Pagamentos&quot;);
+	log.info(&quot;[LOG] Codigo: &quot; + nProcesso);
+	log.info(&quot;[LOG] Atividade atual: &quot; + atividadeAtual);
+	log.info(&quot;[LOG] Proxima atividade: &quot; + proximaAtividade);
+
+	log.info(&quot;[log] BEFORE STATE ENTRY&quot;);
+
+	var ROLE_FINANCEIRO = &quot;Pool:Role:Financeiro&quot;;
+	log.info(&quot;[log] ROLE_FINANCEIRO: &quot; + ROLE_FINANCEIRO);
+	log.info(&quot;[log] BEFORE STATE ENTRY 2&quot;);
+	var FECHAR_LOTE = 3;
+	var FIM_PROCESSO = 6;
+	var CIENCIA_FINANCEIRO = 5;
+	var retornoWS = &quot;&quot;;
+	if (sequenceId == FECHAR_LOTE &amp;&amp; hAPI.getCardValue(&quot;select_fin&quot;) == &quot;Fn&quot;) {
+		log.info(&quot;BEFORE STATE ENTRY - IF 1&quot;);
+		if (hAPI.getCardValue(&quot;skipToActivity&quot;) == null || hAPI.getCardValue(&quot;skipToActivity&quot;).trim() == &quot;&quot;) {
+			try {
+				log.info(&quot;BEFORE STATE ENTRY - IF 2 - TRY/Catch&quot;);
+				retornoWS = fecharLote();
+				var possuiReprovados = possuiTitulosReprovados();
+				if (isResponseOK(retornoWS)) {
+					log.info(&quot;BEFORE STATE ENTRY - IF 2 - TRY/Catch - if 3&quot;);
+					if (possuiReprovados) {
+						log.info(&quot;BEFORE STATE ENTRY - IF 2 - TRY/Catch - if 4&quot;);
+						return enviarPara(CIENCIA_FINANCEIRO, ROLE_FINANCEIRO);
+					} else {
+						return enviarPara(FIM_PROCESSO);
+					}
+				}
+			} catch (e) {
+				log.info(&quot;Problemas ao fechar o lote no Protheus.&quot; + e);
+				enviarEmail(e);
+				throw &quot;Problemas ao fechar o lote no Protheus.&quot;;
+			}
+			if (!isResponseOK(retornoWS)) {
+				throw retornoWS;
+			}
+		} else {
+			// Movimenta??o via Protheus causada por fechamento de lote no
+			// Portal ou Mobile
+			var user = null;
+			if (hAPI.getCardValue(&quot;skipToActivity&quot;).toString() == new java.lang.String(CIENCIA_FINANCEIRO)) {
+				user = ROLE_FINANCEIRO;
+			}
+			enviarPara(hAPI.getCardValue(&quot;skipToActivity&quot;), user);
+		}
+	}
+}</eventDescription>
+    </WorkflowProcessEvent>
+  </list>
+  <list/>
+  <list>
+    <SwimLane>
+      <color>adc9ac</color>
+      <height>130</height>
+      <width>700</width>
+      <positionX>0</positionX>
+      <positionY>101</positionY>
+      <stateName>Aprovador financeiro</stateName>
+      <type>2</type>
+      <parentSequence>0</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>1</sequence>
+      </swimLanePK>
+    </SwimLane>
+    <SwimLane>
+      <color>82b0b7</color>
+      <height>101</height>
+      <width>700</width>
+      <positionX>0</positionX>
+      <positionY>1</positionY>
+      <stateName>Protheus</stateName>
+      <type>2</type>
+      <parentSequence>0</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>2</sequence>
+      </swimLanePK>
+    </SwimLane>
+    <SwimLane>
+      <color>d0daae</color>
+      <height>145</height>
+      <width>700</width>
+      <positionX>0</positionX>
+      <positionY>228</positionY>
+      <stateName>Aprovador</stateName>
+      <type>2</type>
+      <parentSequence>0</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <sequence>3</sequence>
+      </swimLanePK>
+    </SwimLane>
+  </list>
+  <list>
+    <ProcessComponGraf>
+      <componType>1</componType>
+      <positionX>192</positionX>
+      <positionY>24</positionY>
+      <processComponGrafPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <componGrafSequence>1</componGrafSequence>
+      </processComponGrafPK>
+      <stateName>Enviar lote de títulos</stateName>
+    </ProcessComponGraf>
+    <ProcessComponGraf>
+      <componType>1</componType>
+      <positionX>504</positionX>
+      <positionY>240</positionY>
+      <processComponGrafPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <componGrafSequence>2</componGrafSequence>
+      </processComponGrafPK>
+      <stateName>Finalizar - Lote aprovado</stateName>
+    </ProcessComponGraf>
+  </list>
+  <list>
+    <ProcessLinkAssoc>
+      <processLinkAssocPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>10</linkSequence>
+      </processLinkAssocPK>
+      <initialStateSequence>1</initialStateSequence>
+      <finalStateSequence>1</finalStateSequence>
+    </ProcessLinkAssoc>
+    <ProcessLinkAssoc>
+      <processLinkAssocPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>1</version>
+        <linkSequence>11</linkSequence>
+      </processLinkAssocPK>
+      <initialStateSequence>2</initialStateSequence>
+      <finalStateSequence>6</finalStateSequence>
+    </ProcessLinkAssoc>
+  </list>
+  <list>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>7</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>472</positionX>
+      <positionY>52</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>7</linkSequence>
+        <bendSequence>2</bendSequence>
+      </processLinkBendPK>
+      <positionX>472</positionX>
+      <positionY>301</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>15</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>220</positionX>
+      <positionY>365</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>15</linkSequence>
+        <bendSequence>2</bendSequence>
+      </processLinkBendPK>
+      <positionX>617</positionX>
+      <positionY>365</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>23</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>221</positionX>
+      <positionY>204</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Pagamento</processId>
+        <version>51</version>
+        <linkSequence>24</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>101</positionX>
+      <positionY>168</positionY>
+    </ProcessLinkBend>
+  </list>
+  <list/>
+  <list/>
+  <list/>
+</list>

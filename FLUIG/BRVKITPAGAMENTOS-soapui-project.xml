@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="aa6cd93c-5e02-40d0-8eac-6e040fc84b6a" activeEnvironment="Default" name="BRVKITPAGAMENTOS" soapui-version="5.1.2" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="62313627-4ddf-4596-95e5-d2dc1a60c7f0" wsaVersion="NONE" name="BRVKITPAGAMENTOSSOAP" type="wsdl" bindingName="{http://kitpagamentos.bravaecm.com.br}BRVKITPAGAMENTOSSOAP" soapVersion="1_1" anonymous="optional" definition="http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw?WSDL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw?WSDL"><con:part><con:url>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw?WSDL</con:url><con:content><![CDATA[<!--Generated 20150409 15:03:36 by ADVPL WSDL Server 1.110216 / Protheus 7.00.131227A-20150109-->
+<definitions targetNamespace="http://kitpagamentos.bravaecm.com.br" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://kitpagamentos.bravaecm.com.br" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://kitpagamentos.bravaecm.com.br">
+      <s:element name="FECHARLOTE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CLOTE" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CCCUSTO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CMOVIMENTA" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FECHARLOTERESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FECHARLOTERESULT" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETCABECNOTA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CFILNOTA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CPREFIXO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CTITULO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CFORNEC" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETCABECNOTARESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETCABECNOTARESULT" type="s0:ARRAYOFTCABECNOTA"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETHISTAPR">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CFILTIT" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CPREFIXO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CTITULO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CPARCELA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CTIPO" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CFORNEC" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETHISTAPRRESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETHISTAPRRESULT" type="s0:ARRAYOFTHISTAPROV"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETITENSLOTE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CLOTE" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CCCUSTO" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETITENSLOTERESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETITENSLOTERESULT" type="s0:ARRAYOFTITENSLOTE"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETITENSNOTA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CFILNOTA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CNOTA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CSERIE" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CFORNEC" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETITENSNOTARESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETITENSNOTARESULT" type="s0:ARRAYOFTITENSNOTA"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETLOTES">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CUSER" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETLOTESRESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETLOTESRESULT" type="s0:ARRAYOFTCABECLOTES"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETPATHNOTA">
+        <s:complexType>
+          <s:sequence></s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETPATHNOTARESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETPATHNOTARESULT" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETPEDIDOS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CFILNOTA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CNOTA" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CSERIE" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="CFORNEC" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GETPEDIDOSRESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GETPEDIDOSRESULT" type="s0:ARRAYOFTPEDCOMPRA"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GRAVARLOTE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CITEMLOTE" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GRAVARLOTERESPONSE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GRAVARLOTERESULT" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TCABECNOTA">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CONDPAG" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="EMISSAO" type="s:date"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ESPECIE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="FORNECE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="NOMEFOR" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="NUMERO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SERIE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="UF" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALORTOT" type="s:float"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="THISTAPROV">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CCUSTO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DATAAPR" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OBSERV" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RATEIO" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RESPONS" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SITUAC" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALOR" type="s:float"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TITENSLOTE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="EMISSAO" type="s:date"/>
+          <s:element minOccurs="1" maxOccurs="1" name="FILIAL" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="FORNECE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="NATUREZ" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="NUMERO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OBSERV" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PARCELA" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PREFIXO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RATEIO" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SITUAC" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TIPO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALOR" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALORRT" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VENCTO" type="s:date"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TITENSNOTA">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="DESCPROD" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ITEM" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PRODUTO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="QUANTDE" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="UNIDADE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALICMS" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALIPI" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALTOTAL" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALUNIT" type="s:float"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TCABECLOTES">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CCUSTO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DATAGER" type="s:date"/>
+          <s:element minOccurs="1" maxOccurs="1" name="HORA" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="LOTE" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TPEDCOMPRA">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CCUSTO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DESCRI" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="EMISSAO" type="s:date"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ITEM" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="NUMERO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OBSERV" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PRODUTO" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="QUANTDE" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="UNIDADE" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALTOTAL" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="VALUNIT" type="s:float"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTCABECNOTA">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TCABECNOTA" type="s0:TCABECNOTA"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTHISTAPROV">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="THISTAPROV" type="s0:THISTAPROV"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTITENSLOTE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TITENSLOTE" type="s0:TITENSLOTE"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTITENSNOTA">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TITENSNOTA" type="s0:TITENSNOTA"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTCABECLOTES">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TCABECLOTES" type="s0:TCABECLOTES"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ARRAYOFTPEDCOMPRA">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TPEDCOMPRA" type="s0:TPEDCOMPRA"/>
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </types>
+  <message name="FECHARLOTESOAPIN">
+    <part name="parameters" element="s0:FECHARLOTE"/>
+  </message>
+  <message name="FECHARLOTESOAPOUT">
+    <part name="parameters" element="s0:FECHARLOTERESPONSE"/>
+  </message>
+  <message name="GETCABECNOTASOAPIN">
+    <part name="parameters" element="s0:GETCABECNOTA"/>
+  </message>
+  <message name="GETCABECNOTASOAPOUT">
+    <part name="parameters" element="s0:GETCABECNOTARESPONSE"/>
+  </message>
+  <message name="GETHISTAPRSOAPIN">
+    <part name="parameters" element="s0:GETHISTAPR"/>
+  </message>
+  <message name="GETHISTAPRSOAPOUT">
+    <part name="parameters" element="s0:GETHISTAPRRESPONSE"/>
+  </message>
+  <message name="GETITENSLOTESOAPIN">
+    <part name="parameters" element="s0:GETITENSLOTE"/>
+  </message>
+  <message name="GETITENSLOTESOAPOUT">
+    <part name="parameters" element="s0:GETITENSLOTERESPONSE"/>
+  </message>
+  <message name="GETITENSNOTASOAPIN">
+    <part name="parameters" element="s0:GETITENSNOTA"/>
+  </message>
+  <message name="GETITENSNOTASOAPOUT">
+    <part name="parameters" element="s0:GETITENSNOTARESPONSE"/>
+  </message>
+  <message name="GETLOTESSOAPIN">
+    <part name="parameters" element="s0:GETLOTES"/>
+  </message>
+  <message name="GETLOTESSOAPOUT">
+    <part name="parameters" element="s0:GETLOTESRESPONSE"/>
+  </message>
+  <message name="GETPATHNOTASOAPIN">
+    <part name="parameters" element="s0:GETPATHNOTA"/>
+  </message>
+  <message name="GETPATHNOTASOAPOUT">
+    <part name="parameters" element="s0:GETPATHNOTARESPONSE"/>
+  </message>
+  <message name="GETPEDIDOSSOAPIN">
+    <part name="parameters" element="s0:GETPEDIDOS"/>
+  </message>
+  <message name="GETPEDIDOSSOAPOUT">
+    <part name="parameters" element="s0:GETPEDIDOSRESPONSE"/>
+  </message>
+  <message name="GRAVARLOTESOAPIN">
+    <part name="parameters" element="s0:GRAVARLOTE"/>
+  </message>
+  <message name="GRAVARLOTESOAPOUT">
+    <part name="parameters" element="s0:GRAVARLOTERESPONSE"/>
+  </message>
+  <portType name="BRVKITPAGAMENTOSSOAP">
+    <operation name="FECHARLOTE">
+      <documentation>Método de fechamento do lote de aprovação</documentation>
+      <input message="s0:FECHARLOTESOAPIN"/>
+      <output message="s0:FECHARLOTESOAPOUT"/>
+    </operation>
+    <operation name="GETCABECNOTA">
+      <documentation>Método de consulta às notas fiscais de origem dos títulos</documentation>
+      <input message="s0:GETCABECNOTASOAPIN"/>
+      <output message="s0:GETCABECNOTASOAPOUT"/>
+    </operation>
+    <operation name="GETHISTAPR">
+      <documentation>Método de consulta aos históricos de aprovação realizados para o título</documentation>
+      <input message="s0:GETHISTAPRSOAPIN"/>
+      <output message="s0:GETHISTAPRSOAPOUT"/>
+    </operation>
+    <operation name="GETITENSLOTE">
+      <documentation>Método de consulta aos itens dos lotes de títulos gerados</documentation>
+      <input message="s0:GETITENSLOTESOAPIN"/>
+      <output message="s0:GETITENSLOTESOAPOUT"/>
+    </operation>
+    <operation name="GETITENSNOTA">
+      <documentation>Método de consulta aos itens das notas fiscais de origem dos títulos</documentation>
+      <input message="s0:GETITENSNOTASOAPIN"/>
+      <output message="s0:GETITENSNOTASOAPOUT"/>
+    </operation>
+    <operation name="GETLOTES">
+      <documentation>Método de consulta aos lotes de títulos gerados</documentation>
+      <input message="s0:GETLOTESSOAPIN"/>
+      <output message="s0:GETLOTESSOAPOUT"/>
+    </operation>
+    <operation name="GETPATHNOTA">
+      <documentation>Método de consulta ao caminho onde estão as imagens das notas fiscais de origem</documentation>
+      <input message="s0:GETPATHNOTASOAPIN"/>
+      <output message="s0:GETPATHNOTASOAPOUT"/>
+    </operation>
+    <operation name="GETPEDIDOS">
+      <documentation>Método de consulta aos pedidos de compra referentes à nota fiscal de origem dos títulos</documentation>
+      <input message="s0:GETPEDIDOSSOAPIN"/>
+      <output message="s0:GETPEDIDOSSOAPOUT"/>
+    </operation>
+    <operation name="GRAVARLOTE">
+      <documentation>Método de gravação da aprovação dos lotes</documentation>
+      <input message="s0:GRAVARLOTESOAPIN"/>
+      <output message="s0:GRAVARLOTESOAPOUT"/>
+    </operation>
+  </portType>
+  <binding name="BRVKITPAGAMENTOSSOAP" type="s0:BRVKITPAGAMENTOSSOAP">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="FECHARLOTE">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/FECHARLOTE" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETCABECNOTA">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETCABECNOTA" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETHISTAPR">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETHISTAPR" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETITENSLOTE">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETITENSLOTE" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETITENSNOTA">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETITENSNOTA" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETLOTES">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETLOTES" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETPATHNOTA">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETPATHNOTA" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GETPEDIDOS">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GETPEDIDOS" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GRAVARLOTE">
+      <soap:operation soapAction="http://kitpagamentos.bravaecm.com.br/GRAVARLOTE" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="BRVKITPAGAMENTOS">
+    <documentation>Serviços relacionados ao Brava Kit Pagamentos</documentation>
+    <port name="BRVKITPAGAMENTOSSOAP" binding="s0:BRVKITPAGAMENTOSSOAP">
+      <soap:address location="http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint></con:endpoints><con:operation id="d78386de-aecb-436a-b582-146fe11804f7" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/FECHARLOTE" name="FECHARLOTE" bindingOperationName="FECHARLOTE" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="aeb0c1d7-1ac0-45e4-9f55-ecb9bd19996f" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:FECHARLOTE>\r
+         <kit:CLOTE>?</kit:CLOTE>\r
+         <kit:CCCUSTO>?</kit:CCCUSTO>\r
+         <kit:CMOVIMENTA>?</kit:CMOVIMENTA>\r
+      </kit:FECHARLOTE>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/FECHARLOTE"/></con:call></con:operation><con:operation id="3f912985-e62b-4174-8444-9761b6b19f70" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETCABECNOTA" name="GETCABECNOTA" bindingOperationName="GETCABECNOTA" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="38500336-a53e-4fd6-8f85-1f1c4d4fe513" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETCABECNOTA>\r
+         <kit:CFILNOTA>01</kit:CFILNOTA>\r
+         <kit:CPREFIXO>999</kit:CPREFIXO>\r
+         <kit:CTITULO>999999999</kit:CTITULO>\r
+         <kit:CFORNEC>000010</kit:CFORNEC>\r
+      </kit:GETCABECNOTA>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETCABECNOTA"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="402e0424-0a30-4d69-b446-488576b02e4c" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETHISTAPR" name="GETHISTAPR" bindingOperationName="GETHISTAPR" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="701a20fc-b665-46cc-ae03-4064b8009cbe" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETHISTAPR>\r
+         <kit:CFILTIT>?</kit:CFILTIT>\r
+         <kit:CPREFIXO>?</kit:CPREFIXO>\r
+         <kit:CTITULO>?</kit:CTITULO>\r
+         <kit:CPARCELA>?</kit:CPARCELA>\r
+         <kit:CTIPO>?</kit:CTIPO>\r
+         <kit:CFORNEC>?</kit:CFORNEC>\r
+      </kit:GETHISTAPR>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETHISTAPR"/></con:call></con:operation><con:operation id="819a731c-bc74-4892-abe9-b0af7d2c137a" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETITENSLOTE" name="GETITENSLOTE" bindingOperationName="GETITENSLOTE" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3c912c10-a388-4819-8c37-3b0fa7fb2e31" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETITENSLOTE>\r
+         <kit:CLOTE>?</kit:CLOTE>\r
+         <kit:CCCUSTO>?</kit:CCCUSTO>\r
+      </kit:GETITENSLOTE>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETITENSLOTE"/></con:call></con:operation><con:operation id="be7c5489-c1dc-4a25-a766-fdb03c24abd1" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETITENSNOTA" name="GETITENSNOTA" bindingOperationName="GETITENSNOTA" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="c5577c7b-773d-4d00-8c1b-468c1d84fbb7" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETITENSNOTA>\r
+         <kit:CFILNOTA>?</kit:CFILNOTA>\r
+         <kit:CNOTA>?</kit:CNOTA>\r
+         <kit:CSERIE>?</kit:CSERIE>\r
+         <kit:CFORNEC>?</kit:CFORNEC>\r
+      </kit:GETITENSNOTA>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETITENSNOTA"/></con:call></con:operation><con:operation id="6ea31454-96ff-4f78-9995-0834abb78c34" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETLOTES" name="GETLOTES" bindingOperationName="GETLOTES" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="2b43a027-a6ee-4a93-8fdf-8be127097a2f" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETLOTES>\r
+         <kit:CUSER>?</kit:CUSER>\r
+      </kit:GETLOTES>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETLOTES"/></con:call></con:operation><con:operation id="584fb2b8-3d35-4986-ac5d-69d6064c77c2" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETPATHNOTA" name="GETPATHNOTA" bindingOperationName="GETPATHNOTA" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="4beed047-d330-4ef6-9a5b-46dccec25caf" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETPATHNOTA/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETPATHNOTA"/></con:call></con:operation><con:operation id="c4aa8b72-59e7-4249-8ae5-738b492ee22d" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GETPEDIDOS" name="GETPEDIDOS" bindingOperationName="GETPEDIDOS" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="eb4f9075-1db4-482f-9b9b-9e39c293f582" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GETPEDIDOS>\r
+         <kit:CFILNOTA>?</kit:CFILNOTA>\r
+         <kit:CNOTA>?</kit:CNOTA>\r
+         <kit:CSERIE>?</kit:CSERIE>\r
+         <kit:CFORNEC>?</kit:CFORNEC>\r
+      </kit:GETPEDIDOS>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GETPEDIDOS"/></con:call></con:operation><con:operation id="21ec2224-e0d4-439e-85f3-54b615bcbd5d" isOneWay="false" action="http://kitpagamentos.bravaecm.com.br/GRAVARLOTE" name="GRAVARLOTE" bindingOperationName="GRAVARLOTE" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="b4901067-194b-4930-816c-3e90e20d2010" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://10.15.60.132:1298/BRVKITPAGAMENTOS.apw</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:kit="http://kitpagamentos.bravaecm.com.br">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <kit:GRAVARLOTE>\r
+         <kit:CITEMLOTE>?</kit:CITEMLOTE>\r
+      </kit:GRAVARLOTE>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://kitpagamentos.bravaecm.com.br/GRAVARLOTE"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/></con:soapui-project>
